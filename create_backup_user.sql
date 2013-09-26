@@ -1,0 +1,3 @@
+CREATE USER 'backup-user'@'localhost' IDENTIFIED BY 'changeme';
+GRANT SELECT, SHOW VIEW, RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'backup-user'@'localhost';
+FLUSH PRIVILEGES;
