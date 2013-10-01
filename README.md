@@ -94,7 +94,7 @@ The script will retrieve the archive, uncompress it in the *TMP_DIR* variable fo
 In order to restore a server from an incremental backup archive, you must specify the *-i* option:
 
 ```
-sudo ./xb-restore.sh -hi <PATH TO THE COMPRESSED BACKUP>
+sudo ./xb-restore.sh -ih <PATH TO THE COMPRESSED BACKUP>
 ```
 
 The script will use the extra data contained in the incremental backup archive in order to restore all the incremental cycle.
