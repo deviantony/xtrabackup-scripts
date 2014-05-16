@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# (C)2013 Anthony Lapenna @ Workit
+# (C)2013 Anthony Lapenna
 # This script is provided as-is; no liability can be accepted for use.
 # You are free to modify and reproduce so long as this attribution is preserved.
 
