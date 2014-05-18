@@ -44,7 +44,7 @@ fi
 DEFINE_string 'tmp-dir' '/tmp/xb_stream_restore' 'Temporary directory'
 DEFINE_string 'data-dir' '/var/lib/mysql' 'MySQL server data directory' 'd'
 DEFINE_string 'log-file' '/var/log/mysql/xb-restore-stream.log' 'Log file'
-DEFINE_integer 'threads' 1 'Number of threads used to restore the streamed backup' 't'
+DEFINE_integer 'threads' 1 'Number of threads used to decompress the streamed backup' 't'
 DEFINE_integer 'netcat-port' 9999 'Port used by netcat on the client side'
 DEFINE_boolean 'checksum' false 'Use a checksum to verify the backup integrity'
 DEFINE_boolean 'restart' false 'Restart MySQL server after backup restoration' 'r'
