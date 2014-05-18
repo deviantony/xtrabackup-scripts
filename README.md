@@ -129,7 +129,6 @@ You can also specify the following options:
 * --restart: Restart the MySQL service after restoration (default: false).
 * --tmp-dir: Specify the temporary directory used by the script (default: */tmp/xb_backup_inc*).
 * --log-file: Log file for the script (default: _/var/log/mysql/xb-restore-incremental.log_).
-* --threads: You can specify more threads in order to restore quicker (default: 1).
 
 ## Stream a backup between 2 hosts
 
