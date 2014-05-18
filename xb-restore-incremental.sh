@@ -45,7 +45,6 @@ DEFINE_string 'incremental-archive' '' 'Incremental archive target' 'i' 'require
 DEFINE_string 'tmp-dir' '/tmp/xb_restore_inc' 'Temporary directory'
 DEFINE_string 'data-dir' '/var/lib/mysql' 'MySQL server data directory' 'd'
 DEFINE_string 'log-file' '/var/log/mysql/xb-restore-incremental.log' 'Log file'
-DEFINE_integer 'threads' 1 'Number of threads used to restore the backups' 't'
 DEFINE_boolean 'restart' false 'Restart MySQL server after backup restoration' 'r'
 
 FLAGS "$@" || exit $?
