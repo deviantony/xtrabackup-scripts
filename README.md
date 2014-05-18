@@ -25,7 +25,7 @@ And 2 scripts dedicated to backup restoration:
 These scripts use others libraries contained in the _/lib_ folder:
 
 * Bash shell function library (*bsfl*) used for logging: https://github.com/deviantony/bsfl
-* Common bash library (*cbl*) provides utility methods: https://github.com/deviantony/cbl 
+* Common bash library (*cbl*) provides utility methods: https://github.com/deviantony/common-bash-library 
 * shFlags used to handle script parameters: https://github.com/deviantony/shflags
 
 ## Create a backup archive
