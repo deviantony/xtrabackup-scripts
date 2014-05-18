@@ -144,7 +144,7 @@ You can directly stream the state of a local server into another MySQL server on
 The xb-restore-incremental.sh script will shutdown the MySQL service, clean the MySQL datadir and put the server in listening mode:
 
 ```shell
-$ sudo ./xb-restore-incremental.sh
+$ sudo ./xb-restore-stream.sh
 ```
 
 #### Additional options
@@ -155,7 +155,7 @@ You can also specify the following options:
 * --restart: Restart the MySQL service after restoration (default: false).
 * --tmp-dir: Specify the temporary directory used by the script (default: */tmp/xb_backup_inc*).
 * --log-file: Log file for the script (default: _/var/log/mysql/xb-restore-incremental.log_).
-* --threads: You can specify more threads in order to restore quicker (default: 1).
+* --threads: You can specify more threads in order to decompress quicker (default: 1).
 * --netcat-port: Port used by netcat (default: 9999).
 
 ### Backup
