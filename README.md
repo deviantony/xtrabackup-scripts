@@ -102,10 +102,10 @@ You can also specify the following options:
 
 **WARNING**: The folder structure and the file names created by the xb-backup-incremental.sh script needs to be respected in order to restore successfully:
 
-TIMESTAMP_FOLDER/
-:   base_archive.tar.gz
-:   INC/incremental_archive_01.tar.gz
-:   INC/incremental_archive_N.tar.gz
+* TIMESTAMP_FOLDER
+ *  base_archive.tar.gz
+ *  INC/incremental_archive_01.tar.gz
+ *  INC/incremental_archive_N.tar.gz
 
 To restore an incremental backup, you'll need to use the xb-restore-incremental.sh the following way:
 
