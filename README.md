@@ -28,7 +28,7 @@ These scripts use others libraries contained in the _/lib_ folder:
 * Common bash library (*cbl*) provides utility methods: https://github.com/deviantony/common-bash-library 
 * shFlags used to handle script parameters: https://github.com/deviantony/shflags
 
-## Create a backup archive
+## Create and restore a backup archive
 
 ### Backup
 
