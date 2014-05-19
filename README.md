@@ -134,8 +134,8 @@ You can also specify the following options:
 
 You can directly stream the state of a local server into another MySQL server on your network using the following scripts :
 
-* xb_backup_stream.sh on the host to backup
-* xb_restore_stream.sh on the host which will receive the backup
+* xb-backup-stream.sh on the host to backup
+* xb-restore-stream.sh on the host which will receive the backup
 
 **NOTE**: You need to start the restoration phase first.
 
