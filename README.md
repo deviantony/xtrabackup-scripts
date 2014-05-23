@@ -3,7 +3,7 @@ xtrabackup-scripts
 
 Repository hosting wrapper Shell scripts for the Percona Xtrabackup utility.
 
-These scripts allow to create binary backups of a MySQL server (tested under Ubuntu 12.04). 
+These scripts allow to create binary backups of a MySQL server 5.5 (tested under Ubuntu 12.04). 
 
 #### Scripts
 
