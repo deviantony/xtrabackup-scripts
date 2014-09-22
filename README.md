@@ -11,7 +11,7 @@ There is an issue with the Percona Xtrabackup tool 2.2.x and MySQL server <= 5.6
 
 You'll need to ensure the setting *innodb_log_file_size* is set in your MySQL configuration file otherwise Xtrabackup will fail.
 
-See the following issue for more information: #1 
+See the following issue for more information: https://github.com/deviantony/xtrabackup-scripts/issues/1
 
 #### Scripts
 
