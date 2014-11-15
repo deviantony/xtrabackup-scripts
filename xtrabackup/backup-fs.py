@@ -36,6 +36,8 @@ if __name__ == '__main__':
 
     # Create tmp folder
     mkdir_p(arguments['--tmp-dir'], 0o755)
+    temporary_backup_directory = arguments['--tmp-dir'] + '/xtrabackup_tmp'
+    temporary_backup_archive = arguments['--tmp-dir'] + '/backup.tar.gz'
 
     # Prepare archive name and create timestamp folder in repository
     archive_path = prepare_archive(arguments['<repository>'])
@@ -45,20 +47,20 @@ if __name__ == '__main__':
         arguments['--user'],
         arguments['--password'],
         arguments['--backup-threads'],
-        arguments['--tmp-dir'] + '/backup')
+        temporary_backup_directory)
 
     # Apply phasis
-    exec_backup_preparation(arguments['--tmp-dir'] + '/backup')
+    exec_backup_preparation(temporary_backup_directory)
 
     # Exec tar
     create_archive(
-        arguments['--tmp-dir'] + '/backup',
-        arguments['--tmp-dir'] + '/backup.tar.gz')
+        temporary_backup_directory,
+        temporary_backup_archive)
 
     # Move backup from tmp folder to repository
-    shutil.move(arguments['--tmp-dir'] + '/backup.tar.gz', archive_path)
+    shutil.move(temporary_backup_archive, archive_path)
 
     # Remove tmp folder
-    shutil.rmtree(arguments['--tmp-dir'] + '/backup')
+    shutil.rmtree(temporary_backup_directory)
 
     exit(0)
