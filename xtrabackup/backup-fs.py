@@ -39,8 +39,9 @@ if __name__ == '__main__':
     temporary_backup_directory = arguments['--tmp-dir'] + '/xtrabackup_tmp'
     temporary_backup_archive = arguments['--tmp-dir'] + '/backup.tar.gz'
 
-    # Prepare archive name and create timestamp folder in repository
-    archive_path = prepare_archive(arguments['<repository>'])
+    # Prepare archive subrepo and archive name
+    archive_sub_repository = create_sub_repository(arguments['<repository>'])
+    archive_path = prepare_archive_path(archive_sub_repository)
 
     # Exec backup
     exec_filesystem_backup(

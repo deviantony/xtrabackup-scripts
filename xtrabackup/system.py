@@ -6,14 +6,21 @@ import datetime
 from exception import ProgramError
 
 
-def prepare_archive(repository_path):
-    date = datetime.datetime.now()
-    ts = date.strftime("%Y%m%d_%H%M")
-    date_fmt = date.strftime("%Y%m%d")
-    archive_name = 'backup_' + ts + '.tar.gz'
-    archive_repository = repository_path + '/' + date_fmt
-    archive_path = archive_repository + '/' + archive_name
-    mkdir_path(archive_repository, 0o755)
+def create_sub_repository(repository_path):
+    sub_repository = ''.join([
+        repository_path,
+        '/',
+        datetime.datetime.now().strftime("%Y%m%d")])
+    mkdir_path(sub_repository, 0o755)
+    return sub_repository
+
+
+def prepare_archive_path(archive_sub_repository):
+    archive_path = ''.join([
+        archive_sub_repository,
+        '/backup_',
+        datetime.datetime.now().strftime("%Y%m%d_%H%M"),
+        '.tar.gz'])
     return archive_path
 
 
