@@ -1,25 +1,28 @@
 import subprocess
 
 
-def exec_backup(arguments):
-    if arguments['--password']:
+def exec_filesystem_backup(user, password, threads, backup_directory):
+    if password:
         subprocess.check_call([
             'innobackupex',
-            '--user=' + arguments['--user'],
-            '--password=' + arguments['--password'],
-            '--parallel=' + arguments['--backup-threads'],
+            '--user=' + user,
+            '--password=' + password,
+            '--parallel=' + threads,
             '--no-lock',
             '--no-timestamp',
-            arguments['--tmp-dir'] + '/backup'])
+            backup_directory])
     else:
         subprocess.check_call([
             'innobackupex',
-            '--user=' + arguments['--user'],
-            '--parallel=' + arguments['--backup-threads'],
+            '--user=' + user,
+            '--parallel=' + threads,
             '--no-lock',
             '--no-timestamp',
-            arguments['--tmp-dir'] + '/backup'])
+            backup_directory])
 
 
-def exec_backup_apply(tmp_folder):
-    subprocess.check_call(['innobackupex', '--apply-log', tmp_folder])
+def exec_backup_preparation(backup_directory):
+    subprocess.check_call([
+        'innobackupex',
+        '--apply-log',
+        backup_directory])

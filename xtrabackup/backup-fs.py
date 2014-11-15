@@ -18,11 +18,10 @@ Options:
   --backup-threads=<threads>  Threads count [default: 1].
 
 """
-import shutil
 from docopt import docopt
 from system import *
-from xtrabackup import exec_backup, exec_backup_apply
-
+from xtrabackup import *
+import shutil
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='1.0')
@@ -42,10 +41,14 @@ if __name__ == '__main__':
     archive_path = prepare_archive(arguments['<repository>'])
 
     # Exec backup
-    exec_backup(arguments)
+    exec_filesystem_backup(
+        arguments['--user'],
+        arguments['--password'],
+        arguments['--backup-threads'],
+        arguments['--tmp-dir'] + '/backup')
 
     # Apply phasis
-    exec_backup_apply(arguments['--tmp-dir'] + '/backup')
+    exec_backup_preparation(arguments['--tmp-dir'] + '/backup')
 
     # Exec tar
     create_archive(
