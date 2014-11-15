@@ -13,20 +13,20 @@ def prepare_archive(repository_path):
     archive_name = 'backup_' + ts + '.tar.gz'
     archive_repository = repository_path + '/' + date_fmt
     archive_path = archive_repository + '/' + archive_name
-    mkdir_p(archive_repository, 0o755)
+    mkdir_path(archive_repository, 0o755)
     return archive_path
 
 
-def create_archive(folder, archive_path):
+def create_archive(directory, archive_path):
     subprocess.check_call([
         'tar',
         'cpfvz',
         archive_path,
         '-C',
-        folder, '.'])
+        directory, '.'])
 
 
-def mkdir_p(path, mode):
+def mkdir_path(path, mode):
     try:
         os.makedirs(path, mode)
     except OSError as exc:
@@ -42,6 +42,6 @@ def check_binary(binary):
         raise ProgramError("Cannot locate binary: " + binary, None)
 
 
-def check_folder(path):
+def check_path_existence(path):
     if not os.path.exists(path):
         raise ProgramError("Cannot locate folder: " + path, None)

@@ -32,10 +32,10 @@ if __name__ == '__main__':
     check_binary('tar')
 
     # Check for backup repository existence
-    check_folder(arguments['<repository>'])
+    check_path_existence(arguments['<repository>'])
 
     # Create tmp folder
-    mkdir_p(arguments['--tmp-dir'], 0o755)
+    mkdir_path(arguments['--tmp-dir'], 0o755)
     temporary_backup_directory = arguments['--tmp-dir'] + '/xtrabackup_tmp'
     temporary_backup_archive = arguments['--tmp-dir'] + '/backup.tar.gz'
 
