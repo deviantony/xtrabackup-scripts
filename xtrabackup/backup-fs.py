@@ -24,12 +24,14 @@ import shutil
 import system
 import xtrabackup
 import timer
+import logging
 
 
 def main(arguments):
 
-    stopwatch = timer.Timer()
-    logger = log.setup_logger(arguments['--log-file'])
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+    log.attach_file_handler(logger, arguments['--log-file'])
 
     system.check_required_binaries(['innobackupex', 'tar'])
     system.check_path_existence(arguments['<repository>'])
@@ -37,6 +39,7 @@ def main(arguments):
     temporary_backup_directory = arguments['--tmp-dir'] + '/xtrabackup_tmp'
     logger.debug("Temporary_backup_directory: " + temporary_backup_directory)
 
+    stopwatch = timer.Timer()
     # Exec backup
     stopwatch.start_timer()
     xtrabackup.exec_filesystem_backup(
