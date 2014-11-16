@@ -25,12 +25,12 @@ def prepare_archive_path(archive_sub_repository):
 
 
 def create_archive(directory, archive_path):
-    subprocess.check_call([
+    subprocess.check_output([
         'tar',
         'cpfvz',
         archive_path,
         '-C',
-        directory, '.'])
+        directory, '.'], stderr=subprocess.STDOUT)
 
 
 def mkdir_path(path, mode):
