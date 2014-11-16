@@ -25,6 +25,9 @@ import system
 import xtrabackup
 import timer
 import logging
+import exception
+from sys import stdout
+from subprocess import CalledProcessError
 
 
 def main(arguments):
@@ -33,26 +36,48 @@ def main(arguments):
     logger = logging.getLogger(__name__)
     log.attach_file_handler(logger, arguments['--log-file'])
 
-    system.check_required_binaries(['innobackupex', 'tar'])
-    system.check_path_existence(arguments['<repository>'])
+    try:
+        system.check_required_binaries(['innobackupex', 'tar'])
+    except exception.ProgramError:
+        logger.error('Missing binary.', exc_info=True)
+        return 1
+
+    try:
+        system.check_path_existence(arguments['<repository>'])
+    except exception.ProgramError:
+        logger.error('Cannot locate repository.', exc_info=True)
+        return 1
+
     system.mkdir_path(arguments['--tmp-dir'], 0o755)
     temporary_backup_directory = arguments['--tmp-dir'] + '/xtrabackup_tmp'
     logger.debug("Temporary_backup_directory: " + temporary_backup_directory)
 
-    stopwatch = timer.Timer()
     # Exec backup
+    stopwatch = timer.Timer()
     stopwatch.start_timer()
-    xtrabackup.exec_filesystem_backup(
-        arguments['--user'],
-        arguments['--password'],
-        arguments['--backup-threads'],
-        temporary_backup_directory)
+    try:
+        xtrabackup.exec_filesystem_backup(
+            arguments['--user'],
+            arguments['--password'],
+            arguments['--backup-threads'],
+            temporary_backup_directory)
+    except CalledProcessError as e:
+        logger.error(
+            'An error occured during the backup process.', exc_info=True)
+        logger.error('Command output: %s', e.output.decode(stdout.encoding))
+        return 1
     logger.info("Backup time: %s - Duration: %s",
                 stopwatch.stop_timer(), stopwatch.duration_in_seconds())
 
     # Prepare backup
     stopwatch.start_timer()
-    xtrabackup.exec_backup_preparation(temporary_backup_directory)
+    try:
+        xtrabackup.exec_backup_preparation(temporary_backup_directory)
+    except CalledProcessError as e:
+        logger.error(
+            'An error occured during the preparation process.', exc_info=True)
+        logger.error('Command output: %s', e.output.decode(stdout.encoding))
+        return 1
     logger.info("Backup preparation time: %s - Duration: %s",
                 stopwatch.stop_timer(), stopwatch.duration_in_seconds())
 
@@ -60,9 +85,15 @@ def main(arguments):
     temporary_backup_archive = arguments['--tmp-dir'] + '/backup.tar.gz'
     logger.debug("Temporary backup archive: " + temporary_backup_archive)
     stopwatch.start_timer()
-    system.create_archive(
-        temporary_backup_directory,
-        temporary_backup_archive)
+    try:
+        system.create_archive(
+            temporary_backup_directory,
+            temporary_backup_archive)
+    except CalledProcessError as e:
+        logger.error(
+            'An error occured during the backup compression.', exc_info=True)
+        logger.error('Command output: %s', e.output.decode(stdout.encoding))
+        return 1
     logger.info("Backup compression time: %s - Duration: %s",
                 stopwatch.stop_timer(), stopwatch.duration_in_seconds())
 
