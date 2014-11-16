@@ -22,7 +22,7 @@ def exec_filesystem_backup(user, password, threads, backup_directory):
 
 
 def exec_backup_preparation(backup_directory):
-    subprocess.check_call([
+    subprocess.check_output([
         'innobackupex',
         '--apply-log',
-        backup_directory])
+        backup_directory], stderr=subprocess.STDOUT)
