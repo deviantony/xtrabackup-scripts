@@ -44,11 +44,6 @@ if __name__ == '__main__':
     mkdir_path(arguments['--tmp-dir'], 0o755)
     temporary_backup_directory = arguments['--tmp-dir'] + '/xtrabackup_tmp'
     logger.debug("Temporary_backup_directory: " + temporary_backup_directory)
-    temporary_backup_archive = arguments['--tmp-dir'] + '/backup.tar.gz'
-    logger.debug("Temporary backup archive: " + temporary_backup_archive)
-    archive_sub_repository = create_sub_repository(arguments['<repository>'])
-    archive_path = prepare_archive_path(archive_sub_repository)
-    logger.debug("Archive path: " + archive_path)
 
     # Exec backup
     timer.start_timer()
@@ -67,6 +62,8 @@ if __name__ == '__main__':
                 timer.stop_timer(), timer.duration_in_seconds())
 
     # Compress backup
+    temporary_backup_archive = arguments['--tmp-dir'] + '/backup.tar.gz'
+    logger.debug("Temporary backup archive: " + temporary_backup_archive)
     timer.start_timer()
     create_archive(
         temporary_backup_directory,
@@ -76,6 +73,9 @@ if __name__ == '__main__':
 
     # Move backup from temporary directory to repository
     timer.start_timer()
+    archive_sub_repository = create_sub_repository(arguments['<repository>'])
+    archive_path = prepare_archive_path(archive_sub_repository)
+    logger.debug("Archive path: " + archive_path)
     shutil.move(temporary_backup_archive, archive_path)
     logger.info("Archive copy time: %s - Duration: %s",
                 timer.stop_timer(), timer.duration_in_seconds())
