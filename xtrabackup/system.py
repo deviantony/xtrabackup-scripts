@@ -47,9 +47,9 @@ def check_required_binaries(binaries):
     """ Check binary method supported by Python >= 3.4 only """
     for binary in binaries:
         if not shutil.which(binary):
-            raise ProgramError("Cannot locate binary: " + binary, None)
+            raise ProgramError("Cannot locate binary: " + binary)
 
 
 def check_path_existence(path):
     if not os.path.exists(path):
-        raise ProgramError("Cannot locate folder: " + path, None)
+        raise ProgramError("Cannot locate folder: " + path)
