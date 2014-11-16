@@ -19,7 +19,7 @@ Options:
 
 """
 from docopt import docopt
-import logging
+import log
 import shutil
 import system
 import xtrabackup
@@ -27,15 +27,9 @@ import timer
 
 
 def main(arguments):
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)
-    handler = logging.FileHandler(arguments['--log-file'])
-    handler.setLevel(logging.INFO)
-    formatter = logging.Formatter(
-        '%(asctime)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+
     stopwatch = timer.Timer()
+    logger = log.setup_logger(arguments['--log-file'])
 
     system.check_required_binaries(['innobackupex', 'tar'])
     system.check_path_existence(arguments['<repository>'])
