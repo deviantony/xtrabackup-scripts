@@ -19,12 +19,11 @@ Options:
 
 """
 from docopt import docopt
-from system import *
-from xtrabackup import *
-from timer import Timer
-import shutil
 import logging
-
+import shutil
+import system
+import xtrabackup
+import timer
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='1.0')
@@ -37,17 +36,17 @@ if __name__ == '__main__':
         '%(asctime)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    timer = Timer()
+    timer = timer.Timer()
 
-    check_required_binaries(['innobackupex', 'tar'])
-    check_path_existence(arguments['<repository>'])
-    mkdir_path(arguments['--tmp-dir'], 0o755)
+    system.check_required_binaries(['innobackupex', 'tar'])
+    system.check_path_existence(arguments['<repository>'])
+    system.mkdir_path(arguments['--tmp-dir'], 0o755)
     temporary_backup_directory = arguments['--tmp-dir'] + '/xtrabackup_tmp'
     logger.debug("Temporary_backup_directory: " + temporary_backup_directory)
 
     # Exec backup
     timer.start_timer()
-    exec_filesystem_backup(
+    xtrabackup.exec_filesystem_backup(
         arguments['--user'],
         arguments['--password'],
         arguments['--backup-threads'],
@@ -57,7 +56,7 @@ if __name__ == '__main__':
 
     # Prepare backup
     timer.start_timer()
-    exec_backup_preparation(temporary_backup_directory)
+    xtrabackup.exec_backup_preparation(temporary_backup_directory)
     logger.info("Backup preparation time: %s - Duration: %s",
                 timer.stop_timer(), timer.duration_in_seconds())
 
@@ -65,7 +64,7 @@ if __name__ == '__main__':
     temporary_backup_archive = arguments['--tmp-dir'] + '/backup.tar.gz'
     logger.debug("Temporary backup archive: " + temporary_backup_archive)
     timer.start_timer()
-    create_archive(
+    system.create_archive(
         temporary_backup_directory,
         temporary_backup_archive)
     logger.info("Backup compression time: %s - Duration: %s",
@@ -73,8 +72,9 @@ if __name__ == '__main__':
 
     # Move backup from temporary directory to repository
     timer.start_timer()
-    archive_sub_repository = create_sub_repository(arguments['<repository>'])
-    archive_path = prepare_archive_path(archive_sub_repository)
+    archive_sub_repository = system.create_sub_repository(
+        arguments['<repository>'])
+    archive_path = system.prepare_archive_path(archive_sub_repository)
     logger.debug("Archive path: " + archive_path)
     shutil.move(temporary_backup_archive, archive_path)
     logger.info("Archive copy time: %s - Duration: %s",
