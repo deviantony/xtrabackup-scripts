@@ -43,10 +43,11 @@ def mkdir_path(path, mode):
             raise
 
 
-def check_binary(binary):
+def check_required_binaries(binaries):
     """ Check binary method supported by Python >= 3.4 only """
-    if not shutil.which(binary):
-        raise ProgramError("Cannot locate binary: " + binary, None)
+    for binary in binaries:
+        if not shutil.which(binary):
+            raise ProgramError("Cannot locate binary: " + binary, None)
 
 
 def check_path_existence(path):
