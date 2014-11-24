@@ -29,18 +29,23 @@ import exception
 from sys import stdout
 from subprocess import CalledProcessError
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-def main(arguments):
 
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)
-    log.attach_file_handler(logger, arguments['--log-file'])
-
+def check_binaries():
     try:
         system.check_required_binaries(['innobackupex', 'tar'])
     except exception.ProgramError:
         logger.error('Missing binary.', exc_info=True)
-        return 1
+        raise
+
+
+def main(arguments):
+
+    log.attach_file_handler(logger, arguments['--log-file'])
+
+    check_binaries()
 
     try:
         system.check_path_existence(arguments['<repository>'])
