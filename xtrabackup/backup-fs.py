@@ -19,6 +19,7 @@ Options:
 
 """
 from docopt import docopt
+import logging
 import backupTool
 
 
@@ -27,6 +28,11 @@ def main(arguments):
     try:
         backup_tool.check_binaries()
         backup_tool.check_path_existence(arguments['<repository>'])
+    except Exception:
+        logger = logging.getLogger(__name__)
+        logger.error("An error occured.")
+        exit(1)
+    try:
         backup_tool.prepare_workdir(arguments['--tmp-dir'])
         backup_tool.exec_backup(arguments['--user'],
                                 arguments['--password'],
@@ -36,8 +42,9 @@ def main(arguments):
         backup_tool.transfer_backup(arguments['<repository>'])
         backup_tool.clean()
     except Exception:
-        print("shit happened")
-        backupTool.clean()
+        logger = logging.getLogger(__name__)
+        logger.error("An error occured.")
+        backup_tool.clean()
         exit(1)
     exit(0)
 
