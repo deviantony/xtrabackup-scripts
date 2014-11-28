@@ -3,7 +3,8 @@ import subprocess
 
 class CommandExecutor:
 
-    def exec_filesystem_backup(user, password, threads, backup_directory):
+    def exec_filesystem_backup(self, user, password,
+                               threads, backup_directory):
         if password:
             subprocess.check_output([
                 'innobackupex',
@@ -22,7 +23,7 @@ class CommandExecutor:
                 '--no-timestamp',
                 backup_directory], stderr=subprocess.STDOUT)
 
-    def exec_backup_preparation(backup_directory):
+    def exec_backup_preparation(self, backup_directory):
         subprocess.check_output([
             'innobackupex',
             '--apply-log',

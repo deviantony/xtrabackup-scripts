@@ -3,7 +3,10 @@ import logging
 
 class LogManager:
 
-    def attach_file_handler(logger, log_file):
+    def __init__(self):
+        logging.basicConfig(level=logging.INFO)
+
+    def attach_file_handler(self, logger, log_file):
         handler = logging.FileHandler(log_file)
         handler.setLevel(logging.INFO)
         formatter = logging.Formatter(
