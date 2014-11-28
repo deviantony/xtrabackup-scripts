@@ -27,11 +27,6 @@ def main(arguments):
     backup_tool = backupTool.BackupTool(arguments['--log-file'])
     try:
         backup_tool.check_prerequisites(arguments['<repository>'])
-    except Exception:
-        logger = logging.getLogger(__name__)
-        logger.error("An error occured.")
-        exit(1)
-    try:
         backup_tool.prepare_workdir(arguments['--tmp-dir'])
         backup_tool.exec_backup(arguments['--user'],
                                 arguments['--password'],
@@ -43,7 +38,6 @@ def main(arguments):
     except Exception:
         logger = logging.getLogger(__name__)
         logger.error("An error occured.")
-        backup_tool.clean()
         exit(1)
     exit(0)
 

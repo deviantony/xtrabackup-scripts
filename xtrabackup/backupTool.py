@@ -47,6 +47,7 @@ class BackupTool:
                 'An error occured during the backup process.', exc_info=True)
             self.logger.error(
                 'Command output: %s', e.output.decode(stdout.encoding))
+            self.clean()
             raise
         self.logger.info("Backup time: %s - Duration: %s",
                          self.stopWatch.stop_timer(),
@@ -62,6 +63,7 @@ class BackupTool:
                 exc_info=True)
             self.logger.error(
                 'Command output: %s', e.output.decode(stdout.encoding))
+            self.clean()
             raise
         self.logger.info("Backup preparation time: %s - Duration: %s",
                          self.stopWatch.stop_timer(),
@@ -79,6 +81,7 @@ class BackupTool:
                 exc_info=True)
             self.logger.error('Command output: %s',
                               e.output.decode(stdout.encoding))
+            self.clean()
             raise
         self.logger.info("Backup compression time: %s - Duration: %s",
                          self.stopWatch.stop_timer(),
@@ -86,11 +89,19 @@ class BackupTool:
 
     def transfer_backup(self, repository):
         self.stopWatch.start_timer()
-        backupRepository = self.fs_manager.create_sub_repository(repository)
-        finalArchivePath = self.fs_manager.prepare_archive_path(
-            backupRepository)
-        self.logger.debug("Archive path: " + finalArchivePath)
-        shutil.move(self.archivePath, finalArchivePath)
+        try:
+            backupRepository = self.fs_manager.create_sub_repository(
+                repository)
+            finalArchivePath = self.fs_manager.prepare_archive_path(
+                backupRepository)
+            self.logger.debug("Archive path: " + finalArchivePath)
+            shutil.move(self.archivePath, finalArchivePath)
+        except Exception:
+            self.logger.error(
+                'An error occured during the backup compression.',
+                exc_info=True)
+            self.clean()
+            raise
         self.logger.info("Archive copy time: %s - Duration: %s",
                          self.stopWatch.stop_timer(),
                          self.stopWatch.duration_in_seconds())
