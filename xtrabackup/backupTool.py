@@ -15,9 +15,12 @@ class BackupTool:
         self.log_manager = logManager.LogManager()
         self.fs_manager = fileSystemUtil.FileSystemUtil()
         self.command_executor = commandExecutor.CommandExecutor()
+        self.stopWatch = timer.Timer()
+        self.setup_logging(log_file)
+
+    def setup_logging(self, log_file):
         self.logger = logging.getLogger(__name__)
         self.log_manager.attach_file_handler(self.logger, log_file)
-        self.stopWatch = timer.Timer()
 
     def check_prerequisites(self, repository):
         try:
