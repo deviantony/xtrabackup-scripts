@@ -19,18 +19,12 @@ class BackupTool:
         self.log_manager.attach_file_handler(self.logger, log_file)
         self.stopWatch = timer.Timer()
 
-    def check_binaries(self):
+    def check_prerequisites(self, repository):
         try:
             self.fs_manager.check_required_binaries(['innobackupex', 'tar'])
+            self.fs_manager.check_path_existence(repository)
         except exception.ProgramError:
-            self.logger.error('Missing binary.', exc_info=True)
-            raise
-
-    def check_path_existence(self, path):
-        try:
-            self.fs_manager.check_path_existence(path)
-        except exception.ProgramError:
-            self.logger.error('Cannot locate repository.', exc_info=True)
+            self.logger.error('Prerequisites check failed.', exc_info=True)
             raise
 
     def prepare_workdir(self, path):
