@@ -26,8 +26,6 @@ import backupTool
 def main(arguments):
     backup_tool = backupTool.BackupTool(arguments['--log-file'])
     try:
-        # backup_tool.check_binaries()
-        # backup_tool.check_path_existence(arguments['<repository>'])
         backup_tool.check_prerequisites(arguments['<repository>'])
     except Exception:
         logger = logging.getLogger(__name__)
