@@ -1,6 +1,6 @@
-import commandExecutor
-import fileSystemUtil
-import logManager
+import command_executor
+import filesystem_utils
+import log_manager
 import exception
 import logging
 import timer
@@ -12,8 +12,8 @@ from sys import stdout
 class BackupTool:
 
     def __init__(self, log_file):
-        self.log_manager = logManager.LogManager()
-        self.stopWatch = timer.Timer()
+        self.log_manager = log_manager.LogManager()
+        self.stop_watch = timer.Timer()
         self.setup_logging(log_file)
 
     def setup_logging(self, log_file):
@@ -22,23 +22,23 @@ class BackupTool:
 
     def check_prerequisites(self, repository):
         try:
-            fileSystemUtil.check_required_binaries(['innobackupex', 'tar'])
-            fileSystemUtil.check_path_existence(repository)
+            filesystem_utils.check_required_binaries(['innobackupex', 'tar'])
+            filesystem_utils.check_path_existence(repository)
         except exception.ProgramError:
             self.logger.error('Prerequisites check failed.', exc_info=True)
             raise
 
     def prepare_workdir(self, path):
-        fileSystemUtil.mkdir_path(path, 0o755)
+        filesystem_utils.mkdir_path(path, 0o755)
         self.workdir = path + '/xtrabackup_tmp'
         self.logger.debug("Temporary workdir: " + self.workdir)
-        self.archivePath = path + '/backup.tar.gz'
-        self.logger.debug("Temporary archive: " + self.archivePath)
+        self.archive_path = path + '/backup.tar.gz'
+        self.logger.debug("Temporary archive: " + self.archive_path)
 
     def exec_backup(self, user, password, thread_count):
-        self.stopWatch.start_timer()
+        self.stop_watch.start_timer()
         try:
-            commandExecutor.exec_filesystem_backup(
+            command_executor.exec_filesystem_backup(
                 user,
                 password,
                 thread_count,
@@ -51,13 +51,13 @@ class BackupTool:
             self.clean()
             raise
         self.logger.info("Backup time: %s - Duration: %s",
-                         self.stopWatch.stop_timer(),
-                         self.stopWatch.duration_in_seconds())
+                         self.stop_watch.stop_timer(),
+                         self.stop_watch.duration_in_seconds())
 
     def prepare_backup(self):
-        self.stopWatch.start_timer()
+        self.stop_watch.start_timer()
         try:
-            commandExecutor.exec_backup_preparation(self.workdir)
+            command_executor.exec_backup_preparation(self.workdir)
         except CalledProcessError as e:
             self.logger.error(
                 'An error occured during the preparation process.',
@@ -67,13 +67,13 @@ class BackupTool:
             self.clean()
             raise
         self.logger.info("Backup preparation time: %s - Duration: %s",
-                         self.stopWatch.stop_timer(),
-                         self.stopWatch.duration_in_seconds())
+                         self.stop_watch.stop_timer(),
+                         self.stop_watch.duration_in_seconds())
 
     def compress_backup(self):
-        self.stopWatch.start_timer()
+        self.stop_watch.start_timer()
         try:
-            fileSystemUtil.create_archive(self.workdir, self.archivePath)
+            filesystem_utils.create_archive(self.workdir, self.archive_path)
         except CalledProcessError as e:
             self.logger.error(
                 'An error occured during the backup compression.',
@@ -83,17 +83,18 @@ class BackupTool:
             self.clean()
             raise
         self.logger.info("Backup compression time: %s - Duration: %s",
-                         self.stopWatch.stop_timer(),
-                         self.stopWatch.duration_in_seconds())
+                         self.stop_watch.stop_timer(),
+                         self.stop_watch.duration_in_seconds())
 
     def transfer_backup(self, repository):
-        self.stopWatch.start_timer()
+        self.stop_watch.start_timer()
         try:
-            backupRepository = fileSystemUtil.create_sub_repository(repository)
-            finalArchivePath = fileSystemUtil.prepare_archive_path(
-                backupRepository)
-            self.logger.debug("Archive path: " + finalArchivePath)
-            shutil.move(self.archivePath, finalArchivePath)
+            backup_repository = filesystem_utils.create_sub_repository(
+                repository)
+            final_archive_path = filesystem_utils.prepare_archive_path(
+                backup_repository)
+            self.logger.debug("Archive path: " + final_archive_path)
+            shutil.move(self.archive_path, final_archive_path)
         except Exception:
             self.logger.error(
                 'An error occured during the backup compression.',
@@ -101,8 +102,8 @@ class BackupTool:
             self.clean()
             raise
         self.logger.info("Archive copy time: %s - Duration: %s",
-                         self.stopWatch.stop_timer(),
-                         self.stopWatch.duration_in_seconds())
+                         self.stop_watch.stop_timer(),
+                         self.stop_watch.duration_in_seconds())
 
     def clean(self):
         shutil.rmtree(self.workdir)
