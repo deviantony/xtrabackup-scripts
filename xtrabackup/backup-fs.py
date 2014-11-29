@@ -37,7 +37,7 @@ def main(arguments):
         backup_tool.clean()
     except Exception:
         logger = logging.getLogger(__name__)
-        logger.error("An error occured.")
+        logger.error("An error occured.", exc_info=True)
         exit(1)
     exit(0)
 

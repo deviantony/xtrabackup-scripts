@@ -13,7 +13,6 @@ class BackupTool:
 
     def __init__(self, log_file):
         self.log_manager = logManager.LogManager()
-        self.fs_manager = fileSystemUtil.FileSystemUtil()
         self.stopWatch = timer.Timer()
         self.setup_logging(log_file)
 
@@ -23,14 +22,14 @@ class BackupTool:
 
     def check_prerequisites(self, repository):
         try:
-            self.fs_manager.check_required_binaries(['innobackupex', 'tar'])
-            self.fs_manager.check_path_existence(repository)
+            fileSystemUtil.check_required_binaries(['innobackupex', 'tar'])
+            fileSystemUtil.check_path_existence(repository)
         except exception.ProgramError:
             self.logger.error('Prerequisites check failed.', exc_info=True)
             raise
 
     def prepare_workdir(self, path):
-        self.fs_manager.mkdir_path(path, 0o755)
+        fileSystemUtil.mkdir_path(path, 0o755)
         self.workdir = path + '/xtrabackup_tmp'
         self.logger.debug("Temporary workdir: " + self.workdir)
         self.archivePath = path + '/backup.tar.gz'
@@ -74,9 +73,7 @@ class BackupTool:
     def compress_backup(self):
         self.stopWatch.start_timer()
         try:
-            self.fs_manager.create_archive(
-                self.workdir,
-                self.archivePath)
+            fileSystemUtil.create_archive(self.workdir, self.archivePath)
         except CalledProcessError as e:
             self.logger.error(
                 'An error occured during the backup compression.',
@@ -92,9 +89,8 @@ class BackupTool:
     def transfer_backup(self, repository):
         self.stopWatch.start_timer()
         try:
-            backupRepository = self.fs_manager.create_sub_repository(
-                repository)
-            finalArchivePath = self.fs_manager.prepare_archive_path(
+            backupRepository = fileSystemUtil.create_sub_repository(repository)
+            finalArchivePath = fileSystemUtil.prepare_archive_path(
                 backupRepository)
             self.logger.debug("Archive path: " + finalArchivePath)
             shutil.move(self.archivePath, finalArchivePath)
