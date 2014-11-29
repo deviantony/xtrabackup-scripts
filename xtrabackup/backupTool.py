@@ -14,7 +14,6 @@ class BackupTool:
     def __init__(self, log_file):
         self.log_manager = logManager.LogManager()
         self.fs_manager = fileSystemUtil.FileSystemUtil()
-        self.command_executor = commandExecutor.CommandExecutor()
         self.stopWatch = timer.Timer()
         self.setup_logging(log_file)
 
@@ -40,7 +39,7 @@ class BackupTool:
     def exec_backup(self, user, password, thread_count):
         self.stopWatch.start_timer()
         try:
-            self.command_executor.exec_filesystem_backup(
+            commandExecutor.exec_filesystem_backup(
                 user,
                 password,
                 thread_count,
@@ -59,7 +58,7 @@ class BackupTool:
     def prepare_backup(self):
         self.stopWatch.start_timer()
         try:
-            self.command_executor.exec_backup_preparation(self.workdir)
+            commandExecutor.exec_backup_preparation(self.workdir)
         except CalledProcessError as e:
             self.logger.error(
                 'An error occured during the preparation process.',
