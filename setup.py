@@ -50,7 +50,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'py-xtrabackup=xtrabackup.backup-fs:__main__',
+            'py-xtrabackup=xtrabackup:__main__',
         ],
     },
 )
