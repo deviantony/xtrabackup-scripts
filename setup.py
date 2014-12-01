@@ -8,7 +8,7 @@ with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='xtrabackup-pywrapper',
+    name='xtrabackup-py',
 
     version='3.0.0b1',
 
