@@ -3,7 +3,7 @@ import os
 import shutil
 import subprocess
 import datetime
-from exception import ProgramError
+from xtrabackup.exception import ProgramError
 
 
 def create_sub_repository(repository_path):

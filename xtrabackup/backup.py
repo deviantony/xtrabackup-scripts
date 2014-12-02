@@ -19,7 +19,7 @@ Options:
 from docopt import docopt
 import sys
 import logging
-from tools import BackupTool
+from xtrabackup.tools import BackupTool
 
 
 def main():
