@@ -8,7 +8,7 @@ with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='xtrabackup-py',
+    name='pyxtrabackup',
 
     version='3.0.0b1',
 
@@ -45,9 +45,6 @@ setup(
     #     'test': ['coverage'],
     # },
 
-    # To provide executable scripts, use entry points in preference to the
-    # "scripts" keyword. Entry points provide cross-platform support and allow
-    # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
             'py-xtrabackup=xtrabackup:__main__',
