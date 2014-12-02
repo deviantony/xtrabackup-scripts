@@ -1,28 +1,32 @@
 from setuptools import setup, find_packages
 import os
 
-pkg_root = os.path.dirname(__file__)
+package_root = os.path.dirname(__file__)
 
-# Error-handling here is to allow package to be built w/o README included
+about = {}
+with open("xtrabackup/__about__.py") as fp:
+    exec(fp.read(), about)
+
+# Error-handling here is to allow package to be built w/o DESCRIPTION included
 try:
-    long_description = open(os.path.join(pkg_root, 'DESCRIPTION.rst')).read()
+    long_description = open(os.path.join(package_root,
+                                         'DESCRIPTION.rst')).read()
 except IOError:
     long_description = ''
 
 setup(
-    name='pyxtrabackup',
+    name=about["__title__"],
+    version=about["__version__"],
 
-    version='3.0.0b1',
-
-    description='Percona xtrabackup wrapper.',
+    description=about["__summary__"],
     long_description=long_description,
 
-    url='https://github.com/deviantony/xtrabackup-scripts',
+    url=about["__uri__"],
 
-    author='Anthony Lapenna',
-    author_email='lapenna.anthony@gmail.com',
+    author=about["__author__"],
+    author_email=about["__email__"],
 
-    license='Apache 2.0',
+    license=about["__license__"],
 
     classifiers=[
         'Development Status :: 4 - Beta',
