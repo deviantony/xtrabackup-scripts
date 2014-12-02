@@ -7,10 +7,10 @@ about = {}
 with open("xtrabackup/__about__.py") as fp:
     exec(fp.read(), about)
 
-# Error-handling here is to allow package to be built w/o DESCRIPTION included
+# Error-handling here is to allow package to be built w/o README included
 try:
     long_description = open(os.path.join(package_root,
-                                         'DESCRIPTION.rst')).read()
+                                         'README.rst')).read()
 except IOError:
     long_description = ''
 
