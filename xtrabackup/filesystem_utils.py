@@ -1,6 +1,5 @@
 import errno
 import os
-import shutil
 import subprocess
 import datetime
 from distutils import spawn
