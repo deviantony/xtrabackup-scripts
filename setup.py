@@ -1,11 +1,13 @@
 from setuptools import setup, find_packages
-from codecs import open
-from os import path
+import os
 
-here = path.abspath(path.dirname(__file__))
+pkg_root = os.path.dirname(__file__)
 
-with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
-    long_description = f.read()
+# Error-handling here is to allow package to be built w/o README included
+try:
+    long_description = open(os.path.join(pkg_root, 'DESCRIPTION.rst')).read()
+except IOError:
+    long_description = ''
 
 setup(
     name='pyxtrabackup',
@@ -47,7 +49,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'py-xtrabackup=xtrabackup:__main__',
+            'pyxtrabackup=xtrabackup.backup:main',
         ],
     },
 )

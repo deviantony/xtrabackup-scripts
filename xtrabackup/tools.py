@@ -2,9 +2,9 @@ import command_executor
 import filesystem_utils
 import log_manager
 import exception
-import logging
 import timer
 import shutil
+import logging
 from subprocess import CalledProcessError
 from sys import stdout
 
