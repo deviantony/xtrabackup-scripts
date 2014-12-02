@@ -1,30 +1,30 @@
-#!/usr/bin/env python3
-
 """Xtrabackup script
 
 Usage:
-  backup-fs.py <repository> --user=<user> [--password=<pwd>] [--tmp-dir=<tmp>] [--log-file=<log>] [--backup-threads=<threads>] 
-  backup-fs.py (-h | --help)
-  backup-fs.py --version
+    backup-fs.py <repository> --user=<user> [--password=<pwd>] [--tmp-dir=<tmp>] [--log-file=<log>] [--backup-threads=<threads>] 
+    backup-fs.py (-h | --help)
+    backup-fs.py --version
 
 
 Options:
-  -h --help                   Show this screen.
-  --version                   Show version.
-  --user=<user>               MySQL user.
-  --password=<pwd>            MySQL password.
-  --tmp-dir=<tmp>             Temp folder [default: /tmp].
-  --log-file=<log>            Log file [default: /tmp/backup.log].
-  --backup-threads=<threads>  Threads count [default: 1].
+    -h --help                   Show this screen.
+    --version                   Show version.
+    --user=<user>               MySQL user.
+    --password=<pwd>            MySQL password.
+    --tmp-dir=<tmp>             Temp folder [default: /tmp].
+    --log-file=<log>            Log file [default: /tmp/backup.log].
+    --backup-threads=<threads>  Threads count [default: 1].
 
 """
 from docopt import docopt
+import sys
 import logging
-import backupTool
+from xtrabackup.tools import BackupTool
 
 
-def main(arguments):
-    backup_tool = backupTool.BackupTool(arguments['--log-file'])
+def main():
+    arguments = docopt(__doc__, version='1.0')
+    backup_tool = BackupTool(arguments['--log-file'])
     try:
         backup_tool.check_prerequisites(arguments['<repository>'])
         backup_tool.prepare_workdir(arguments['--tmp-dir'])
@@ -44,5 +44,4 @@ def main(arguments):
 
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__, version='1.0')
-    main(arguments)
+    sys.exit(main())

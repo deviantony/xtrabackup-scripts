@@ -1,10 +1,10 @@
-import command_executor
-import filesystem_utils
-import log_manager
-import exception
-import logging
-import timer
+import xtrabackup.command_executor as command_executor
+import xtrabackup.filesystem_utils as filesystem_utils
+import xtrabackup.log_manager as log_manager
+import xtrabackup.exception as exception
+import xtrabackup.timer as timer
 import shutil
+import logging
 from subprocess import CalledProcessError
 from sys import stdout
 
