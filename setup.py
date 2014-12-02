@@ -9,8 +9,7 @@ with open("xtrabackup/__about__.py") as fp:
 
 # Error-handling here is to allow package to be built w/o README included
 try:
-    long_description = open(os.path.join(package_root,
-                                         'README.rst')).read()
+    long_description = open(os.path.join(package_root, 'README.rst')).read()
 except IOError:
     long_description = ''
 
