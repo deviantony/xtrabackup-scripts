@@ -1,9 +1,9 @@
 """Xtrabackup script
 
 Usage:
-    backup-fs.py <repository> --user=<user> [--password=<pwd>] [--tmp-dir=<tmp>] [--log-file=<log>] [--backup-threads=<threads>] 
-    backup-fs.py (-h | --help)
-    backup-fs.py --version
+    pyxtrabackup <repository> --user=<user> [--password=<pwd>] [--tmp-dir=<tmp>] [--log-file=<log>] [--backup-threads=<threads>] 
+    pyxtrabackup (-h | --help)
+    pyxtrabackup --version
 
 
 Options:
