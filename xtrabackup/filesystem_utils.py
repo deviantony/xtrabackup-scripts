@@ -3,6 +3,7 @@ import os
 import shutil
 import subprocess
 import datetime
+from distutils import spawn
 from xtrabackup.exception import ProgramError
 
 
@@ -44,9 +45,8 @@ def mkdir_path(path, mode):
 
 
 def check_required_binaries(binaries):
-    """ Check binary method supported by Python >= 3.4 only """
     for binary in binaries:
-        if not shutil.which(binary):
+        if spawn.find_executable(binary) is None:
             raise ProgramError("Cannot locate binary: " + binary)
 
 
