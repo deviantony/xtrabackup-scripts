@@ -1,19 +1,18 @@
+.. -*- restructuredtext -*-
+
 ============
 pyxtrabackup
 ============
 
-pyxtrabackup is a Python wrapper for the Percona Xtrabackup utility, see `official homepage <http://www.percona.com/software/percona-xtrabackup>`_.
+``pyxtrabackup`` is a Python wrapper for the Percona Xtrabackup utility, see `official homepage <http://www.percona.com/software/percona-xtrabackup>`_.
 
 
 Installation
 ============
 
-Use *pip* to install it:
+Use ``pip`` to install it::
 
-.. code-block:: bash
-
-$ pip install pyxtrabackup
-
+   $ pip install pyxtrabackup
 
 Usage
 =====
@@ -23,9 +22,7 @@ Backup
 
 This tool can be used to create a backuo of a local MySQL server. It will create a a compressed archive and move it into a timestamp named folder in the specified repository.
 
-Example of use:
-
-.. code-block:: bash
+Example of use::
 
 $ pyxtrabackup <PATH TO REPOSITORY> --user=<MYSQL USER> [ --password=<MYSQL PASSWORD> ]
 
@@ -44,14 +41,11 @@ Restoration
 
 The archive is containing a binary backup of a MySQL server, all you need to do in order to restore the backup is to extract the content of the archive in your MySQL datadir, setup the permissions for the files and start your server:
 
-.. code-block:: bash
+::
 
 $ sudo rm -rf /path/to/mysql/datadir/*
-
 $ sudo tar xvpzf /path/to/backup_archive.tar.gz -C /path/to/mysql/datadir
-
 $ sudo chown -R mysql:mysql /path/to/mysql/datadir
-
 $ sudo service mysql start
 
 Limitations
