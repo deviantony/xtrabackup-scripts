@@ -12,7 +12,7 @@ Options:
     --user=<user>               MySQL user.
     --password=<pwd>            MySQL password.
     --tmp-dir=<tmp>             Temp folder [default: /tmp].
-    --log-file=<log>            Log file [default: /tmp/backup.log].
+    --log-file=<log>            Log file [default: /var/log/pyxtrabackup.log].
     --backup-threads=<threads>  Threads count [default: 1].
 
 """
