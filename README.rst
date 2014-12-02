@@ -47,8 +47,11 @@ The archive is containing a binary backup of a MySQL server, all you need to do 
 .. code-block:: bash
 
 $ sudo rm -rf /path/to/mysql/datadir/*
+
 $ sudo tar xvpzf /path/to/backup_archive.tar.gz -C /path/to/mysql/datadir
+
 $ sudo chown -R mysql:mysql /path/to/mysql/datadir
+
 $ sudo service mysql start
 
 Limitations
