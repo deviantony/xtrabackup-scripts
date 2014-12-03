@@ -20,7 +20,9 @@ Usage
 Backup
 ------
 
-This tool can be used to create a backuo of a local MySQL server. It will create a a compressed archive and move it into a timestamp named folder in the specified repository.
+This tool can be used to create a backup of a local MySQL server. It will create a a compressed archive and move it into a timestamp named folder in the specified repository.
+
+You will need a MySQL user with the appropriates rights to create the backup, check the ``sql`` folder on the git repository for an example.
 
 Example of use::
 
