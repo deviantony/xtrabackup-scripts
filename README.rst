@@ -23,7 +23,7 @@ Installation
 
 Use ``pip`` to install it::
 
-   $ pip install pyxtrabackup
+   $ pip install --pre pyxtrabackup
 
 Usage
 =====
