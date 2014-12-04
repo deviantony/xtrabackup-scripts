@@ -39,6 +39,10 @@ Example of use::
 
 $ pyxtrabackup <PATH TO REPOSITORY> --user=<MYSQL USER> [ --password=<MYSQL PASSWORD> ]
 
+Usage in a cron file::
+
+@midnight    mysql    /usr/local/bin/pyxtrabackup /mnt/myrepo --user=backup-user --password=changeme --log-file=/var/log/mysql/pyxtrabackup.log 2>&1
+
 Additional options
 ^^^^^^^^^^^^^^^^^^
 
