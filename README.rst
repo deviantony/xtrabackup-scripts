@@ -6,6 +6,17 @@ pyxtrabackup
 
 ``pyxtrabackup`` is a Python wrapper for the Percona Xtrabackup utility, see `official homepage <http://www.percona.com/software/percona-xtrabackup>`_.
 
+Work in progress
+================
+
+The tool is currently in 3.0.0-BETA version and allows to create full backups only.
+
+The features available in the 2.x versions will be added for the 3.0.0 RELEASE version, such as:
+
+* Incremental backups and the associated restoration script
+* Streamed backups and the associated restoration script
+
+If you'd like to use these features, I recommend the use of the latest release (``2.1.2``).
 
 Installation
 ============
