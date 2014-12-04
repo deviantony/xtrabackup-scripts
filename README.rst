@@ -16,7 +16,7 @@ The features available in the 2.x versions will be added for the 3.0.0 RELEASE v
 * Incremental backups and the associated restoration script
 * Streamed backups and the associated restoration script
 
-If you'd like to use these features, I recommend the use of the latest release (``2.1.2``).
+For now, if you'd like to use these features, I recommend the use of the latest release (``2.1.2``).
 
 Installation
 ============
