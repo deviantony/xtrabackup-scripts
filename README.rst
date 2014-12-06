@@ -6,13 +6,24 @@ pyxtrabackup
 
 ``pyxtrabackup`` is a Python wrapper for the Percona Xtrabackup utility, see `official homepage <http://www.percona.com/software/percona-xtrabackup>`_.
 
+Work in progress
+================
+
+The tool is currently in 3.0.0-BETA version and allows to create full backups only.
+
+The features available in the 2.x versions will be added for the 3.0.0 RELEASE version, such as:
+
+* Incremental backups and the associated restoration script
+* Streamed backups and the associated restoration script
+
+For now, if you'd like to use these features, I recommend the use of the latest release (``2.1.2``).
 
 Installation
 ============
 
 Use ``pip`` to install it::
 
-   $ pip install pyxtrabackup
+   $ pip install --pre pyxtrabackup
 
 Usage
 =====
@@ -27,6 +38,10 @@ You will need a MySQL user with the appropriate permissions to create the backup
 Example of use::
 
 $ pyxtrabackup <PATH TO REPOSITORY> --user=<MYSQL USER> [ --password=<MYSQL PASSWORD> ]
+
+Usage in a cron file::
+
+@midnight    mysql    /usr/local/bin/pyxtrabackup /mnt/myrepo --user=backup-user --password=changeme --log-file=/var/log/mysql/pyxtrabackup.log 2>&1
 
 Additional options
 ^^^^^^^^^^^^^^^^^^
