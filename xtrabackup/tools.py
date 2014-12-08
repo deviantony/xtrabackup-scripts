@@ -35,7 +35,7 @@ class BackupTool:
         self.archive_path = path + '/backup.tar.gz'
         self.logger.debug("Temporary archive: " + self.archive_path)
 
-    def exec_backup(self, user, password, thread_count):
+    def exec_full_backup(self, user, password, thread_count):
         self.stop_watch.start_timer()
         try:
             command_executor.exec_filesystem_backup(
