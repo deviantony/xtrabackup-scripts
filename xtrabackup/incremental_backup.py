@@ -29,10 +29,16 @@ def main():
     try:
         backup_tool.check_prerequisites(arguments['<repository>'])
         backup_tool.prepare_workdir(arguments['--tmp-dir'])
-        backup_tool.exec_full_backup(arguments['--user'],
-                                     arguments['--password'],
-                                     arguments['--backup-threads'])
-        backup_tool.prepare_backup()
+        if arguments['--incremental']:
+            backup_tool.load_inc_data()
+            backup_tool.exec_inc_backup()
+            backup_tool.prepare_inc_backup()
+        else:
+            backup_tool.exec_full_backup(arguments['--user'],
+                                         arguments['--password'],
+                                         arguments['--backup-threads'])
+            backup_tool.prepare_backup(True)
+            backup_tool.save_inc_data()
         backup_tool.compress_backup()
         backup_tool.transfer_backup(arguments['<repository>'])
         backup_tool.clean()

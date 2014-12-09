@@ -54,10 +54,10 @@ class BackupTool:
                          self.stop_watch.stop_timer(),
                          self.stop_watch.duration_in_seconds())
 
-    def prepare_backup(self):
+    def prepare_backup(self, redo_logs):
         self.stop_watch.start_timer()
         try:
-            command_executor.exec_backup_preparation(self.workdir)
+            command_executor.exec_backup_preparation(self.workdir, redo_logs)
         except CalledProcessError as e:
             self.logger.error(
                 'An error occured during the preparation process.',

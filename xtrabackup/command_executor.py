@@ -21,8 +21,15 @@ def exec_filesystem_backup(user, password, threads, backup_directory):
             backup_directory], stderr=subprocess.STDOUT)
 
 
-def exec_backup_preparation(backup_directory):
-    subprocess.check_output([
-        'innobackupex',
-        '--apply-log',
-        backup_directory], stderr=subprocess.STDOUT)
+def exec_backup_preparation(backup_directory, redo_logs):
+    if redo_logs:
+        subprocess.check_output([
+            'innobackupex',
+            '--apply-log',
+            '--redo-only',
+            backup_directory], stderr=subprocess.STDOUT)
+    else:
+        subprocess.check_output([
+            'innobackupex',
+            '--apply-log',
+            backup_directory], stderr=subprocess.STDOUT)
