@@ -10,3 +10,8 @@ ADD requirements.txt /tmp/requirements.txt
 RUN /bin/zsh -c 'source ~/.zshrc; workon python3; pip install -r /tmp/requirements.txt'
 
 RUN echo "export PYTHONPATH=${PYTHONPATH}:/python" >> /root/.zshrc
+
+ADD tests/prepare_database.sql /sql/prepare_database.sql
+ADD tests/insert_data.sql /sql/insert_data.sql
+
+RUN /etc/init.d/mysql start && cat /sql/prepare_database.sql | mysql -u root
