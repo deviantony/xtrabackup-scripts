@@ -47,6 +47,9 @@ class BackupTool:
         self.final_archive_path = filesystem_utils.prepare_archive_path(
             self.backup_repository, backup_prefix)
 
+    def exec_incremental_backup():
+        pass
+
     def exec_full_backup(self, user, password, thread_count):
         self.stop_watch.start_timer()
         try:
@@ -124,3 +127,6 @@ class BackupTool:
             ['BASEDIR=' + self.backup_repository,
              'LSN=' + last_lsn,
              'INCREMENTAL_STEP=' + str(0)])
+
+    def load_incremental_data(self):
+        pass
