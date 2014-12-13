@@ -150,9 +150,9 @@ class BackupTool:
                 self.incremental_step += 1
             else:
                 self.incremental_step = 0
-                self.last_lsn = filesystem_utils.retrieve_value_from_file(
-                    self.workdir + '/xtrabackup_checkpoints',
-                    '^to_lsn = (\d+)$')
+            self.last_lsn = filesystem_utils.retrieve_value_from_file(
+                self.workdir + '/xtrabackup_checkpoints',
+                '^to_lsn = (\d+)$')
             filesystem_utils.write_array_to_file(
                 '/var/tmp/pyxtrabackup-incremental',
                 ['BASEDIR=' + self.backup_repository,
