@@ -41,6 +41,7 @@ def main():
                                          arguments['--backup-threads'])
         backup_tool.save_incremental_data(arguments['--incremental'])
         backup_tool.compress_backup()
+        backup_tool.prepare_archive_name(arguments['--incremental'], True)
         backup_tool.transfer_backup(arguments['<repository>'])
         backup_tool.clean()
     except Exception:

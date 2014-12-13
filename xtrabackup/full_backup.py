@@ -34,6 +34,7 @@ def main():
                                      arguments['--backup-threads'])
         backup_tool.prepare_backup(False)
         backup_tool.compress_backup()
+        backup_tool.prepare_archive_name(False, False)
         backup_tool.transfer_backup(arguments['<repository>'])
         backup_tool.clean()
     except Exception:
