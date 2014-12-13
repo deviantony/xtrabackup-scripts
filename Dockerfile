@@ -1,5 +1,4 @@
-FROM deviantony/python
+FROM deviantony/python-dev
 
-ADD . /tmp
-RUN cd /tmp
-ENTRYPOINT ["tox"]
+RUN apt-get install -y mysql-server
+ADD . /python
