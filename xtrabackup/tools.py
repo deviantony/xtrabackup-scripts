@@ -47,7 +47,7 @@ class BackupTool:
         self.final_archive_path = filesystem_utils.prepare_archive_path(
             self.backup_repository, backup_prefix)
 
-    def exec_incremental_backup():
+    def exec_incremental_backup(self):
         pass
 
     def exec_full_backup(self, user, password, thread_count):
@@ -120,13 +120,35 @@ class BackupTool:
         shutil.rmtree(self.workdir)
 
     def save_incremental_data(self):
-        last_lsn = filesystem_utils.retrieve_value_from_file(
-            self.workdir + '/xtrabackup_checkpoints', '^to_lsn = (\d+)$')
-        filesystem_utils.write_array_to_file(
-            '/var/tmp/pyxtrabackup-incremental',
-            ['BASEDIR=' + self.backup_repository,
-             'LSN=' + last_lsn,
-             'INCREMENTAL_STEP=' + str(0)])
+        try:
+            self.last_lsn = filesystem_utils.retrieve_value_from_file(
+                self.workdir + '/xtrabackup_checkpoints', '^to_lsn = (\d+)$')
+            filesystem_utils.write_array_to_file(
+                '/var/tmp/pyxtrabackup-incremental',
+                ['BASEDIR=' + self.backup_repository,
+                 'LSN=' + self.last_lsn,
+                 'INCREMENTAL_STEP=' + str(0)])
+        except:
+            self.logger.error(
+                'Unable to save the incremental backup data.',
+                exc_info=True)
+            self.clean()
+            raise
 
     def load_incremental_data(self):
-        pass
+        try:
+            self.base_dir = filesystem_utils.retrieve_value_from_file(
+                '/var/tmp/pyxtrabackup-incremental',
+                '^BASEDIR=(.*)$')
+            self.last_lsn = filesystem_utils.retrieve_value_from_file(
+                '/var/tmp/pyxtrabackup-incremental',
+                '^LSN=(\d+)$')
+            self.incremental_step = filesystem_utils.retrieve_value_from_file(
+                '/var/tmp/pyxtrabackup-incremental',
+                '^INCREMENTAL_STEP=(\d+)$')
+        except:
+            self.logger.error(
+                'Unable to load the incremental backup data.',
+                exc_info=True)
+            self.clean()
+            raise

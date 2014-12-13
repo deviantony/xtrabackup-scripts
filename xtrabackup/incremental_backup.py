@@ -31,8 +31,8 @@ def main():
         backup_tool.prepare_workdir(arguments['--tmp-dir'])
         backup_tool.prepare_repository(arguments['<repository>'], True)
         if arguments['--incremental']:
-            backup_tool.load_inc_data()
-            backup_tool.exec_inc_backup()
+            backup_tool.load_incremental_data()
+            backup_tool.exec_incremental_backup()
         else:
             backup_tool.exec_full_backup(arguments['--user'],
                                          arguments['--password'],
