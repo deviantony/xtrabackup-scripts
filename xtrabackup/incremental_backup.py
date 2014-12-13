@@ -32,12 +32,14 @@ def main():
         backup_tool.prepare_repository(arguments['<repository>'], True)
         if arguments['--incremental']:
             backup_tool.load_incremental_data()
-            backup_tool.exec_incremental_backup()
+            backup_tool.exec_incremental_backup(arguments['--user'],
+                                                arguments['--password'],
+                                                arguments['--backup-threads'])
         else:
             backup_tool.exec_full_backup(arguments['--user'],
                                          arguments['--password'],
                                          arguments['--backup-threads'])
-            backup_tool.save_incremental_data()
+        backup_tool.save_incremental_data(arguments['--incremental'])
         backup_tool.compress_backup()
         backup_tool.transfer_backup(arguments['<repository>'])
         backup_tool.clean()

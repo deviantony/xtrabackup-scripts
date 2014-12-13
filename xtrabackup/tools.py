@@ -47,8 +47,26 @@ class BackupTool:
         self.final_archive_path = filesystem_utils.prepare_archive_path(
             self.backup_repository, backup_prefix)
 
-    def exec_incremental_backup(self):
-        pass
+    def exec_incremental_backup(self, user, password, thread_count):
+        self.stop_watch.start_timer()
+        try:
+            command_executor.exec_incremental_backup(
+                user,
+                password,
+                thread_count,
+                self.last_lsn,
+                self.workdir)
+        except CalledProcessError as e:
+            self.logger.error(
+                'An error occured during the incremental backup process.',
+                exc_info=True)
+            self.logger.error(
+                'Command output: %s', e.output.decode(stdout.encoding))
+            self.clean()
+            raise
+        self.logger.info("Incremental backup time: %s - Duration: %s",
+                         self.stop_watch.stop_timer(),
+                         self.stop_watch.duration_in_seconds())
 
     def exec_full_backup(self, user, password, thread_count):
         self.stop_watch.start_timer()
@@ -119,15 +137,20 @@ class BackupTool:
     def clean(self):
         shutil.rmtree(self.workdir)
 
-    def save_incremental_data(self):
+    def save_incremental_data(self, incremental):
         try:
-            self.last_lsn = filesystem_utils.retrieve_value_from_file(
-                self.workdir + '/xtrabackup_checkpoints', '^to_lsn = (\d+)$')
+            if incremental:
+                self.incremental_step += 1
+            else:
+                self.incremental_step = 0
+                self.last_lsn = filesystem_utils.retrieve_value_from_file(
+                    self.workdir + '/xtrabackup_checkpoints',
+                    '^to_lsn = (\d+)$')
             filesystem_utils.write_array_to_file(
                 '/var/tmp/pyxtrabackup-incremental',
                 ['BASEDIR=' + self.backup_repository,
                  'LSN=' + self.last_lsn,
-                 'INCREMENTAL_STEP=' + str(0)])
+                 'INCREMENTAL_STEP=' + str(self.incremental_step)])
         except:
             self.logger.error(
                 'Unable to save the incremental backup data.',
@@ -143,9 +166,10 @@ class BackupTool:
             self.last_lsn = filesystem_utils.retrieve_value_from_file(
                 '/var/tmp/pyxtrabackup-incremental',
                 '^LSN=(\d+)$')
-            self.incremental_step = filesystem_utils.retrieve_value_from_file(
-                '/var/tmp/pyxtrabackup-incremental',
-                '^INCREMENTAL_STEP=(\d+)$')
+            self.incremental_step = int(
+                filesystem_utils.retrieve_value_from_file(
+                    '/var/tmp/pyxtrabackup-incremental',
+                    '^INCREMENTAL_STEP=(\d+)$'))
         except:
             self.logger.error(
                 'Unable to load the incremental backup data.',
