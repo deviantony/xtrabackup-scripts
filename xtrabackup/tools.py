@@ -35,6 +35,18 @@ class BackupTool:
         self.archive_path = path + '/backup.tar.gz'
         self.logger.debug("Temporary archive: " + self.archive_path)
 
+    def prepare_repository(self, repository, incremental):
+        if incremental:
+            backup_prefix = 'base_'
+            sub_folder = '/INC'
+        else:
+            backup_prefix = ''
+            sub_folder = ''
+        self.backup_repository = filesystem_utils.create_sub_repository(
+            repository, sub_folder)
+        self.final_archive_path = filesystem_utils.prepare_archive_path(
+            self.backup_repository, backup_prefix)
+
     def exec_full_backup(self, user, password, thread_count):
         self.stop_watch.start_timer()
         try:
@@ -89,12 +101,8 @@ class BackupTool:
     def transfer_backup(self, repository):
         self.stop_watch.start_timer()
         try:
-            backup_repository = filesystem_utils.create_sub_repository(
-                repository)
-            final_archive_path = filesystem_utils.prepare_archive_path(
-                backup_repository)
-            self.logger.debug("Archive path: " + final_archive_path)
-            shutil.move(self.archive_path, final_archive_path)
+            self.logger.debug("Archive path: " + self.final_archive_path)
+            shutil.move(self.archive_path, self.final_archive_path)
         except Exception:
             self.logger.error(
                 'An error occured during the backup compression.',
@@ -107,3 +115,12 @@ class BackupTool:
 
     def clean(self):
         shutil.rmtree(self.workdir)
+
+    def save_incremental_data(self):
+        last_lsn = filesystem_utils.retrieve_value_from_file(
+            self.workdir + '/xtrabackup_checkpoints', '^to_lsn = (\d+)$')
+        filesystem_utils.write_array_to_file(
+            '/var/tmp/pyxtrabackup-incremental',
+            ['BASEDIR=' + self.backup_repository,
+             'LSN=' + last_lsn,
+             'INCREMENTAL_STEP=' + str(0)])

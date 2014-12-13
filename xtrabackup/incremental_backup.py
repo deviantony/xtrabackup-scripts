@@ -29,6 +29,7 @@ def main():
     try:
         backup_tool.check_prerequisites(arguments['<repository>'])
         backup_tool.prepare_workdir(arguments['--tmp-dir'])
+        backup_tool.prepare_repository(arguments['<repository>'], True)
         if arguments['--incremental']:
             backup_tool.load_inc_data()
             backup_tool.exec_inc_backup()
@@ -38,7 +39,7 @@ def main():
                                          arguments['--password'],
                                          arguments['--backup-threads'])
             backup_tool.prepare_backup(True)
-            backup_tool.save_inc_data()
+            backup_tool.save_incremental_data()
         backup_tool.compress_backup()
         backup_tool.transfer_backup(arguments['<repository>'])
         backup_tool.clean()

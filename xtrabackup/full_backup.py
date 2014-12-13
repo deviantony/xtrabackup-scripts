@@ -28,6 +28,7 @@ def main():
     try:
         backup_tool.check_prerequisites(arguments['<repository>'])
         backup_tool.prepare_workdir(arguments['--tmp-dir'])
+        backup_tool.prepare_repository(arguments['<repository>'], False)
         backup_tool.exec_full_backup(arguments['--user'],
                                      arguments['--password'],
                                      arguments['--backup-threads'])

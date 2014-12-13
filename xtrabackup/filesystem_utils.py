@@ -4,21 +4,25 @@ import subprocess
 import datetime
 from distutils import spawn
 from xtrabackup.exception import ProgramError
+from re import search
 
 
-def create_sub_repository(repository_path):
+def create_sub_repository(repository_path, sub_folder):
     sub_repository = ''.join([
         repository_path,
         '/',
-        datetime.datetime.now().strftime("%Y%m%d")])
+        datetime.datetime.now().strftime("%Y%m%d"),
+        sub_folder])
     mkdir_path(sub_repository, 0o755)
     return sub_repository
 
 
-def prepare_archive_path(archive_sub_repository):
+def prepare_archive_path(archive_sub_repository, prefix):
     archive_path = ''.join([
         archive_sub_repository,
-        '/backup_',
+        '/',
+        prefix,
+        'backup_',
         datetime.datetime.now().strftime("%Y%m%d_%H%M"),
         '.tar.gz'])
     return archive_path
@@ -52,3 +56,17 @@ def check_required_binaries(binaries):
 def check_path_existence(path):
     if not os.path.exists(path):
         raise ProgramError("Cannot locate folder: " + path)
+
+
+def retrieve_value_from_file(path, pattern):
+    with open(path) as fp:
+        for line in fp:
+            value = search(pattern, line)
+            if value:
+                return value.group(1)
+
+
+def write_array_to_file(path, array):
+    with open(path, 'w') as fp:
+        for item in array:
+            fp.write(item + '\n')
