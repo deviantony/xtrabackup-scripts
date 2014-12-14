@@ -57,3 +57,9 @@ def exec_backup_preparation(backup_directory, redo_logs):
             'innobackupex',
             '--apply-log',
             backup_directory], stderr=subprocess.STDOUT)
+
+
+def exec_manage_service(service_name, action):
+    subprocess.check_output([
+        '/etc/init.d/' + service_name,
+        action], stderr=subprocess.STDOUT)

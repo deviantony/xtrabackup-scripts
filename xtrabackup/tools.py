@@ -197,7 +197,7 @@ class RestoreTool:
         self.log_manager.attach_file_handler(self.logger, log_file)
 
     def stop_service(self):
-        pass
+        command_executor.exec_manage_service('mysql', 'stop')
 
     def clean_data_dir(self):
         pass
@@ -212,4 +212,4 @@ class RestoreTool:
         pass
 
     def start_service(self):
-        pass
+        command_executor.exec_manage_service('mysql', 'stop')
