@@ -216,7 +216,6 @@ class RestoreTool:
 
     def prepare_data_dir(self):
         command_executor.exec_backup_preparation('/var/lib/mysql', False)
-        pass
 
     def set_data_dir_permissions(self):
         command_executor.exec_chown('mysql', 'mysql', '/var/lib/mysql')
