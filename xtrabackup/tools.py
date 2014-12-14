@@ -203,22 +203,48 @@ class RestoreTool:
 
     def stop_service(self):
         command_executor.exec_manage_service('mysql', 'stop')
+        print('Service stop: OK')
 
     def clean_data_dir(self):
         filesystem_utils.clean_directory('/var/lib/mysql')
+        print('Datadir clean: OK')
 
     def restore_base_backup(self, archive_path):
         filesystem_utils.extract_archive(archive_path, '/var/lib/mysql')
         command_executor.exec_backup_preparation('/var/lib/mysql', True)
+        print('Restore base: OK')
 
-    def restore_incremental_backups(self):
-        pass
+    def restore_incremental_backups(self, incremental_archive):
+        repository, archive_name = filesystem_utils.split_path(
+            incremental_archive)
+        incremental_target = int(archive_name.split('_')[1])
+        for step in range(1, incremental_target + 1):
+            self.restore_incremental_backup(repository, step)
+
+    def restore_incremental_backup(self, archive_repository, incremental_step):
+        prefix = ''.join(['inc_', str(incremental_step), '_'])
+        backup_archive = filesystem_utils.get_prefixed_file_in_dir(
+            archive_repository, prefix)
+        extracted_archive_path = ''.join([self.workdir, '/',
+                                          prefix, 'archive'])
+        filesystem_utils.mkdir_path(extracted_archive_path, 0o755)
+        filesystem_utils.extract_archive(backup_archive,
+                                         extracted_archive_path)
+        command_executor.exec_incremental_preparation('/var/lib/mysql',
+                                                      extracted_archive_path)
+        print('Restore inc archive: OK')
 
     def prepare_data_dir(self):
         command_executor.exec_backup_preparation('/var/lib/mysql', False)
+        print('Datadir prepa: OK')
 
     def set_data_dir_permissions(self):
         command_executor.exec_chown('mysql', 'mysql', '/var/lib/mysql')
+        print('Datadir permissions: OK')
 
     def start_service(self):
-        command_executor.exec_manage_service('mysql', 'stop')
+        command_executor.exec_manage_service('mysql', 'start')
+        print('Service start: OK')
+
+    def clean(self):
+        filesystem_utils.delete_directory(self.workdir)

@@ -34,12 +34,13 @@ def main():
         restore_tool.stop_service()
         restore_tool.clean_data_dir()
         restore_tool.restore_base_backup(arguments['--base-archive'])
-        restore_tool.restore_incremental_backups()
+        restore_tool.restore_incremental_backups(
+            arguments['--incremental-archive'])
         restore_tool.prepare_data_dir()
         restore_tool.set_data_dir_permissions()
+        restore_tool.clean()
         if arguments['--restart']:
             restore_tool.start_service()
-        pass
     except Exception:
         logger = logging.getLogger(__name__)
         logger.error("An error occured during the restoration process.",

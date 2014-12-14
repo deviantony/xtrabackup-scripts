@@ -6,6 +6,7 @@ from distutils import spawn
 from xtrabackup.exception import ProgramError
 from re import search
 from shutil import rmtree, move
+from glob import glob
 
 
 def create_sub_repository(repository_path, sub_folder):
@@ -29,6 +30,7 @@ def prepare_archive_path(archive_sub_repository, prefix):
     return archive_path
 
 
+# Move to command exec
 def create_archive(directory, archive_path):
     subprocess.check_output([
         'tar',
@@ -38,6 +40,7 @@ def create_archive(directory, archive_path):
         directory, '.'], stderr=subprocess.STDOUT)
 
 
+# Move to command exec
 def extract_archive(archive_path, destination_path):
     subprocess.check_output([
         'tar',
@@ -97,3 +100,13 @@ def clean_directory(path):
             os.unlink(file_path)
         else:
             rmtree(file_path)
+
+
+def split_path(path):
+    head, tail = os.path.split(path)
+    return head, tail
+
+
+def get_prefixed_file_in_dir(directory, prefix):
+    files = glob(''.join([directory, '/', prefix, '*']))
+    return files[0]

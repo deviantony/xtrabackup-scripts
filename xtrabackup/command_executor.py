@@ -59,6 +59,15 @@ def exec_backup_preparation(backup_directory, redo_logs):
             backup_directory], stderr=subprocess.STDOUT)
 
 
+def exec_incremental_preparation(backup_directory, incremental_directory):
+    subprocess.check_output([
+        'innobackupex',
+        '--apply-log',
+        '--redo-only',
+        '--incremental-dir=' + incremental_directory,
+        backup_directory], stderr=subprocess.STDOUT)
+
+
 def exec_manage_service(service_name, action):
     subprocess.check_output([
         '/etc/init.d/' + service_name,
