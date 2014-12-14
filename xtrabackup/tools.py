@@ -112,7 +112,7 @@ class BackupTool:
     def compress_backup(self):
         self.stop_watch.start_timer()
         try:
-            filesystem_utils.create_archive(self.workdir, self.archive_path)
+            command_executor.create_archive(self.workdir, self.archive_path)
         except CalledProcessError as e:
             self.logger.error(
                 'An error occured during the backup compression.',
@@ -224,7 +224,7 @@ class RestoreTool:
     def restore_base_backup(self, archive_path):
         self.stop_watch.start_timer()
         try:
-            filesystem_utils.extract_archive(archive_path, '/var/lib/mysql')
+            command_executor.extract_archive(archive_path, '/var/lib/mysql')
             command_executor.exec_backup_preparation('/var/lib/mysql', True)
         except CalledProcessError as e:
             self.logger.error(
@@ -262,7 +262,7 @@ class RestoreTool:
             extracted_archive_path = ''.join([self.workdir, '/',
                                               prefix, 'archive'])
             filesystem_utils.mkdir_path(extracted_archive_path, 0o755)
-            filesystem_utils.extract_archive(backup_archive,
+            command_executor.extract_archive(backup_archive,
                                              extracted_archive_path)
             command_executor.exec_incremental_preparation(
                 '/var/lib/mysql',

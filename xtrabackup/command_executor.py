@@ -80,3 +80,21 @@ def exec_chown(user, group, directory_path):
         '-R',
         user + ':' + group,
         directory_path], stderr=subprocess.STDOUT)
+
+
+def create_archive(directory, archive_path):
+    subprocess.check_output([
+        'tar',
+        'cpvzf',
+        archive_path,
+        '-C',
+        directory, '.'], stderr=subprocess.STDOUT)
+
+
+def extract_archive(archive_path, destination_path):
+    subprocess.check_output([
+        'tar',
+        'xpvzf',
+        archive_path,
+        '-C',
+        destination_path], stderr=subprocess.STDOUT)

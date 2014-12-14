@@ -1,6 +1,5 @@
 import errno
 import os
-import subprocess
 import datetime
 from distutils import spawn
 from xtrabackup.exception import ProgramError
@@ -28,26 +27,6 @@ def prepare_archive_path(archive_sub_repository, prefix):
         datetime.datetime.now().strftime("%Y%m%d_%H%M"),
         '.tar.gz'])
     return archive_path
-
-
-# Move to command exec
-def create_archive(directory, archive_path):
-    subprocess.check_output([
-        'tar',
-        'cpvzf',
-        archive_path,
-        '-C',
-        directory, '.'], stderr=subprocess.STDOUT)
-
-
-# Move to command exec
-def extract_archive(archive_path, destination_path):
-    subprocess.check_output([
-        'tar',
-        'xpvzf',
-        archive_path,
-        '-C',
-        destination_path], stderr=subprocess.STDOUT)
 
 
 def mkdir_path(path, mode):
