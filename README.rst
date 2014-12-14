@@ -22,8 +22,8 @@ Use ``pip`` to install it::
 
    $ pip install --pre pyxtrabackup
 
-How to do a full backup and restore it
-======================================
+Full backup and restoration
+===========================
 
 Backup
 ------
