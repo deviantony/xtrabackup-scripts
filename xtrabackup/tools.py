@@ -36,11 +36,11 @@ class BackupTool:
 
     def prepare_repository(self, repository, incremental):
         if incremental:
-            sub_folder = '/INC'
+            sub_directory = '/INC'
         else:
-            sub_folder = ''
+            sub_directory = ''
         self.backup_repository = filesystem_utils.create_sub_repository(
-            repository, sub_folder)
+            repository, sub_directory)
 
     def prepare_archive_name(self, incremental, incremental_cycle):
         if incremental:

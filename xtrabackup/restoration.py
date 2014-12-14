@@ -15,7 +15,7 @@ Options:
     --incremental-archive=<archive_path>        Incremental archive target.
     --data-dir=<data_dir>                       MySQL server data directory [default: /var/lib/mysql]
     --restart                                   Restart the server after backup restoration.
-    --tmp-dir=<tmp>                             Temp folder [default: /tmp].
+    --tmp-dir=<tmp>                             Temporary directory [default: /tmp].
     --log-file=<log>                            Log file [default: /var/log/pyxtrabackup-restore.log].
     --backup-threads=<threads>                  Threads count [default: 1].
 

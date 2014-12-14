@@ -12,7 +12,7 @@ Options:
     --user=<user>               MySQL user.
     --password=<pwd>            MySQL password.
     --incremental               Start an incremental cycle.
-    --tmp-dir=<tmp>             Temp folder [default: /tmp].
+    --tmp-dir=<tmp>             Temporary directory [default: /tmp].
     --log-file=<log>            Log file [default: /var/log/pyxtrabackup.log].
     --backup-threads=<threads>  Threads count [default: 1].
 

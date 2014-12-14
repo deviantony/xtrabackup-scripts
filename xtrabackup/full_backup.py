@@ -11,7 +11,7 @@ Options:
     --version                   Show version.
     --user=<user>               MySQL user.
     --password=<pwd>            MySQL password.
-    --tmp-dir=<tmp>             Temp folder [default: /tmp].
+    --tmp-dir=<tmp>             Temporart directory [default: /tmp].
     --log-file=<log>            Log file [default: /var/log/pyxtrabackup.log].
     --backup-threads=<threads>  Threads count [default: 1].
 
