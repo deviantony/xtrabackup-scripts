@@ -8,12 +8,12 @@ from shutil import rmtree, move
 from glob import glob
 
 
-def create_sub_repository(repository_path, sub_folder):
+def create_sub_repository(repository_path, sub_directory):
     sub_repository = ''.join([
         repository_path,
         '/',
         datetime.datetime.now().strftime("%Y%m%d"),
-        sub_folder])
+        sub_directory])
     mkdir_path(sub_repository, 0o755)
     return sub_repository
 
@@ -47,7 +47,7 @@ def check_required_binaries(binaries):
 
 def check_path_existence(path):
     if not os.path.exists(path):
-        raise ProgramError("Cannot locate folder: " + path)
+        raise ProgramError("Cannot locate directory: " + path)
 
 
 def retrieve_value_from_file(path, pattern):
