@@ -1,8 +1,8 @@
 """Xtrabackup script
 
 Usage:
-    pyxtrabackup <repository> --user=<user> [--password=<pwd>] [--tmp-dir=<tmp>] [--log-file=<log>] [--backup-threads=<threads>] 
-    pyxtrabackup (-h | --help)
+    pyxtrabackup-inc <repository> --user=<user> [--password=<pwd>] [--incremental] [--tmp-dir=<tmp>] [--log-file=<log>] [--backup-threads=<threads>] 
+    pyxtrabackup-inc (-h | --help)
     pyxtrabackup --version
 
 
@@ -11,7 +11,8 @@ Options:
     --version                   Show version.
     --user=<user>               MySQL user.
     --password=<pwd>            MySQL password.
-    --tmp-dir=<tmp>             Temporart directory [default: /tmp].
+    --incremental               Start an incremental cycle.
+    --tmp-dir=<tmp>             Temporary directory [default: /tmp].
     --log-file=<log>            Log file [default: /var/log/pyxtrabackup.log].
     --backup-threads=<threads>  Threads count [default: 1].
 
@@ -28,13 +29,19 @@ def main():
     try:
         backup_tool.check_prerequisites(arguments['<repository>'])
         backup_tool.prepare_workdir(arguments['--tmp-dir'])
-        backup_tool.prepare_repository(arguments['<repository>'], False)
-        backup_tool.exec_full_backup(arguments['--user'],
-                                     arguments['--password'],
-                                     arguments['--backup-threads'])
-        backup_tool.prepare_backup(False)
+        backup_tool.prepare_repository(arguments['<repository>'], True)
+        if arguments['--incremental']:
+            backup_tool.load_incremental_data()
+            backup_tool.exec_incremental_backup(arguments['--user'],
+                                                arguments['--password'],
+                                                arguments['--backup-threads'])
+        else:
+            backup_tool.exec_full_backup(arguments['--user'],
+                                         arguments['--password'],
+                                         arguments['--backup-threads'])
+        backup_tool.save_incremental_data(arguments['--incremental'])
         backup_tool.compress_backup()
-        backup_tool.prepare_archive_name(False, False)
+        backup_tool.prepare_archive_name(arguments['--incremental'], True)
         backup_tool.transfer_backup(arguments['<repository>'])
         backup_tool.clean()
     except Exception:

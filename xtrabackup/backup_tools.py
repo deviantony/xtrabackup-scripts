@@ -3,7 +3,6 @@ import xtrabackup.filesystem_utils as filesystem_utils
 import xtrabackup.log_manager as log_manager
 import xtrabackup.exception as exception
 import xtrabackup.timer as timer
-import shutil
 import logging
 from subprocess import CalledProcessError
 from sys import stdout
@@ -35,6 +34,46 @@ class BackupTool:
         self.archive_path = path + '/backup.tar.gz'
         self.logger.debug("Temporary archive: " + self.archive_path)
 
+    def prepare_repository(self, repository, incremental):
+        if incremental:
+            sub_directory = '/INC'
+        else:
+            sub_directory = ''
+        self.backup_repository = filesystem_utils.create_sub_repository(
+            repository, sub_directory)
+
+    def prepare_archive_name(self, incremental, incremental_cycle):
+        if incremental:
+            backup_prefix = ''.join(['inc_', str(self.incremental_step), '_'])
+        else:
+            if incremental_cycle:
+                backup_prefix = 'base_'
+            else:
+                backup_prefix = ''
+        self.final_archive_path = filesystem_utils.prepare_archive_path(
+            self.backup_repository, backup_prefix)
+
+    def exec_incremental_backup(self, user, password, thread_count):
+        self.stop_watch.start_timer()
+        try:
+            command_executor.exec_incremental_backup(
+                user,
+                password,
+                thread_count,
+                self.last_lsn,
+                self.workdir)
+        except CalledProcessError as e:
+            self.logger.error(
+                'An error occured during the incremental backup process.',
+                exc_info=True)
+            self.logger.error(
+                'Command output: %s', e.output.decode(stdout.encoding))
+            self.clean()
+            raise
+        self.logger.info("Incremental backup time: %s - Duration: %s",
+                         self.stop_watch.stop_timer(),
+                         self.stop_watch.duration_in_seconds())
+
     def exec_full_backup(self, user, password, thread_count):
         self.stop_watch.start_timer()
         try:
@@ -54,10 +93,10 @@ class BackupTool:
                          self.stop_watch.stop_timer(),
                          self.stop_watch.duration_in_seconds())
 
-    def prepare_backup(self):
+    def prepare_backup(self, redo_logs):
         self.stop_watch.start_timer()
         try:
-            command_executor.exec_backup_preparation(self.workdir)
+            command_executor.exec_backup_preparation(self.workdir, redo_logs)
         except CalledProcessError as e:
             self.logger.error(
                 'An error occured during the preparation process.',
@@ -73,7 +112,7 @@ class BackupTool:
     def compress_backup(self):
         self.stop_watch.start_timer()
         try:
-            filesystem_utils.create_archive(self.workdir, self.archive_path)
+            command_executor.create_archive(self.workdir, self.archive_path)
         except CalledProcessError as e:
             self.logger.error(
                 'An error occured during the backup compression.',
@@ -89,12 +128,9 @@ class BackupTool:
     def transfer_backup(self, repository):
         self.stop_watch.start_timer()
         try:
-            backup_repository = filesystem_utils.create_sub_repository(
-                repository)
-            final_archive_path = filesystem_utils.prepare_archive_path(
-                backup_repository)
-            self.logger.debug("Archive path: " + final_archive_path)
-            shutil.move(self.archive_path, final_archive_path)
+            self.logger.debug("Archive path: " + self.final_archive_path)
+            filesystem_utils.move_file(self.archive_path,
+                                       self.final_archive_path)
         except Exception:
             self.logger.error(
                 'An error occured during the backup compression.',
@@ -106,4 +142,44 @@ class BackupTool:
                          self.stop_watch.duration_in_seconds())
 
     def clean(self):
-        shutil.rmtree(self.workdir)
+        filesystem_utils.delete_directory(self.workdir)
+
+    def save_incremental_data(self, incremental):
+        try:
+            if incremental:
+                self.incremental_step += 1
+            else:
+                self.incremental_step = 0
+            self.last_lsn = filesystem_utils.retrieve_value_from_file(
+                self.workdir + '/xtrabackup_checkpoints',
+                '^to_lsn = (\d+)$')
+            filesystem_utils.write_array_to_file(
+                '/var/tmp/pyxtrabackup-incremental',
+                ['BASEDIR=' + self.backup_repository,
+                 'LSN=' + self.last_lsn,
+                 'INCREMENTAL_STEP=' + str(self.incremental_step)])
+        except:
+            self.logger.error(
+                'Unable to save the incremental backup data.',
+                exc_info=True)
+            self.clean()
+            raise
+
+    def load_incremental_data(self):
+        try:
+            self.base_dir = filesystem_utils.retrieve_value_from_file(
+                '/var/tmp/pyxtrabackup-incremental',
+                '^BASEDIR=(.*)$')
+            self.last_lsn = filesystem_utils.retrieve_value_from_file(
+                '/var/tmp/pyxtrabackup-incremental',
+                '^LSN=(\d+)$')
+            self.incremental_step = int(
+                filesystem_utils.retrieve_value_from_file(
+                    '/var/tmp/pyxtrabackup-incremental',
+                    '^INCREMENTAL_STEP=(\d+)$'))
+        except:
+            self.logger.error(
+                'Unable to load the incremental backup data.',
+                exc_info=True)
+            self.clean()
+            raise

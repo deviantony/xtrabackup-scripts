@@ -55,6 +55,8 @@ setup(
     entry_points={
         'console_scripts': [
             'pyxtrabackup=xtrabackup.full_backup:main',
+            'pyxtrabackup-inc=xtrabackup.incremental_backup:main',
+            'pyxtrabackup-restore=xtrabackup.restoration:main'
         ],
     },
 )
