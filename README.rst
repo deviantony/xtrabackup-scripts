@@ -67,7 +67,7 @@ Setup an incremental backup cycle
 
 An incremental backup cycle is consisting of a full binary backup (the base backup) and one or more incremental backups containing only the data difference between it and the last backup.
 
-See `Wikipedia: incremental backup`_ for more information.
+See `Wikipedia incremental backup`_ for more information.
 
 Backup
 ------
@@ -94,12 +94,13 @@ You can also specify the following options:
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
 
 
-Incremental cycle restoration
-=============================
+Restoration
+-----------
 
 *WARNING*: The folder structure and the file names created by the *pyxtrabackup-inc* binary needs to be respected in order to restore successfully:
 
 * TIMESTAMP_FOLDER
+ 
  *  INC/base_backup_DATETIME.tar.gz
  *  INC/inc_1_backup_DATETIME.tar.gz
  *  INC/inc_N_backup_DATETIME.tar.gzz
@@ -147,4 +148,4 @@ It has been tested against the following Python versions:
 
 * Python 3.4
 
-.. _Wikipedia: incremental backup: http://en.wikipedia.org/wiki/Incremental_backup
+.. _Wikipedia incremental backup: http://en.wikipedia.org/wiki/Incremental_backup
