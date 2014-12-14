@@ -7,28 +7,36 @@ Usage:
 
 
 Options:
-    -h --help                                           Show this screen.
-    --version                                           Show version.
-    --user=<user>                                       MySQL user.
-    --password=<pwd>                                    MySQL password.
-    --base-archive=<base_archive_path>                  Base backup.
-    --incremental-archive=<incremental_archive_path>    Incremental archive target.
-    --data-dir=<data_dir>                               MySQL server data directory [default: /var/lib/mysql]
-    --restart                                           Restart the server after backup restoration.
-    --tmp-dir=<tmp>                                     Temp folder [default: /tmp].
-    --log-file=<log>                                    Log file [default: /var/log/pyxtrabackup-restore.log].
-    --backup-threads=<threads>                          Threads count [default: 1].
+    -h --help                                   Show this screen.
+    --version                                   Show version.
+    --user=<user>                               MySQL user.
+    --password=<pwd>                            MySQL password.
+    --base-archive=<archive_path>               Base backup.
+    --incremental-archive=<archive_path>        Incremental archive target.
+    --data-dir=<data_dir>                       MySQL server data directory [default: /var/lib/mysql]
+    --restart                                   Restart the server after backup restoration.
+    --tmp-dir=<tmp>                             Temp folder [default: /tmp].
+    --log-file=<log>                            Log file [default: /var/log/pyxtrabackup-restore.log].
+    --backup-threads=<threads>                  Threads count [default: 1].
 
 """
 from docopt import docopt
 import sys
 import logging
-from xtrabackup.tools import BackupTool
+from xtrabackup.tools import RestoreTool
 
 
 def main():
     arguments = docopt(__doc__, version='1.0')
+    restore_tool = RestoreTool(arguments['--log-file'])
     try:
+        restore_tool.stop_service()
+        restore_tool.clean_data_dir()
+        restore_tool.restore_base_backup()
+        restore_tool.restore_incremental_backups()
+        restore_tool.prepare_data_dir()
+        if arguments['--restart']:
+            restore_tool.start_service()
         pass
     except Exception:
         logger = logging.getLogger(__name__)

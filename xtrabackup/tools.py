@@ -183,3 +183,33 @@ class BackupTool:
                 exc_info=True)
             self.clean()
             raise
+
+
+class RestoreTool:
+
+    def __init__(self, log_file):
+        self.log_manager = log_manager.LogManager()
+        self.stop_watch = timer.Timer()
+        self.setup_logging(log_file)
+
+    def setup_logging(self, log_file):
+        self.logger = logging.getLogger(__name__)
+        self.log_manager.attach_file_handler(self.logger, log_file)
+
+    def stop_service(self):
+        pass
+
+    def clean_data_dir(self):
+        pass
+
+    def restore_base_backup(self):
+        pass
+
+    def restore_incremental_backups(self):
+        pass
+
+    def prepare_data_dir(self):
+        pass
+
+    def start_service(self):
+        pass
