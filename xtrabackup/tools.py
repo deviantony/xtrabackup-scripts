@@ -3,7 +3,6 @@ import xtrabackup.filesystem_utils as filesystem_utils
 import xtrabackup.log_manager as log_manager
 import xtrabackup.exception as exception
 import xtrabackup.timer as timer
-import shutil
 import logging
 from subprocess import CalledProcessError
 from sys import stdout
@@ -130,7 +129,8 @@ class BackupTool:
         self.stop_watch.start_timer()
         try:
             self.logger.debug("Archive path: " + self.final_archive_path)
-            shutil.move(self.archive_path, self.final_archive_path)
+            filesystem_utils.move_file(self.archive_path,
+                                       self.final_archive_path)
         except Exception:
             self.logger.error(
                 'An error occured during the backup compression.',
@@ -142,7 +142,7 @@ class BackupTool:
                          self.stop_watch.duration_in_seconds())
 
     def clean(self):
-        shutil.rmtree(self.workdir)
+        filesystem_utils.delete_directory(self.workdir)
 
     def save_incremental_data(self, incremental):
         try:
@@ -200,7 +200,7 @@ class RestoreTool:
         command_executor.exec_manage_service('mysql', 'stop')
 
     def clean_data_dir(self):
-        pass
+        filesystem_utils.clean_directory('/var/lib/mysql')
 
     def restore_base_backup(self):
         pass

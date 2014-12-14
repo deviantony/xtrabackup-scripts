@@ -5,6 +5,7 @@ import datetime
 from distutils import spawn
 from xtrabackup.exception import ProgramError
 from re import search
+from shutil import rmtree, move
 
 
 def create_sub_repository(repository_path, sub_folder):
@@ -70,3 +71,20 @@ def write_array_to_file(path, array):
     with open(path, 'w') as fp:
         for item in array:
             fp.write(item + '\n')
+
+
+def move_file(origin_path, destination_path):
+    move(origin_path, destination_path)
+
+
+def delete_directory(path):
+    rmtree(path)
+
+
+def clean_directory(path):
+    for file_object in os.listdir(path):
+        file_path = os.path.join(path, file_object)
+        if os.path.islink(file_path) or os.path.isfile(file_path):
+            os.unlink(file_path)
+        else:
+            rmtree(file_path)
