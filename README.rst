@@ -99,11 +99,9 @@ Restoration
 
 *WARNING*: The folder structure and the file names created by the *pyxtrabackup-inc* binary needs to be respected in order to restore successfully:
 
-* TIMESTAMP_FOLDER
- 
- *  INC/base_backup_DATETIME.tar.gz
- *  INC/inc_1_backup_DATETIME.tar.gz
- *  INC/inc_N_backup_DATETIME.tar.gzz
+ *  TIMESTAMP_FOLDER/INC/base_backup_DATETIME.tar.gz
+ *  TIMESTAMP_FOLDER/INC/inc_1_backup_DATETIME.tar.gz
+ *  TIMESTAMP_FOLDER/INC/inc_N_backup_DATETIME.tar.gzz
 
 To restore an incremental backup, you'll need to use the *pyxtrabackup-restore* binary the following way: ::
 
