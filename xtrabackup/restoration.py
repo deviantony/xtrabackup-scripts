@@ -28,7 +28,8 @@ from xtrabackup.tools import RestoreTool
 
 def main():
     arguments = docopt(__doc__, version='1.0')
-    restore_tool = RestoreTool(arguments['--log-file'])
+    restore_tool = RestoreTool(arguments['--log-file'],
+                               arguments['--data-dir'])
     try:
         restore_tool.prepare_workdir(arguments['--tmp-dir'])
         restore_tool.stop_service()

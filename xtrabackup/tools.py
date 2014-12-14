@@ -187,8 +187,9 @@ class BackupTool:
 
 class RestoreTool:
 
-    def __init__(self, log_file):
+    def __init__(self, log_file, data_dir):
         self.log_manager = log_manager.LogManager()
+        self.data_dir = data_dir
         self.stop_watch = timer.Timer()
         self.setup_logging(log_file)
 
@@ -213,7 +214,7 @@ class RestoreTool:
 
     def clean_data_dir(self):
         try:
-            filesystem_utils.clean_directory('/var/lib/mysql')
+            filesystem_utils.clean_directory(self.data_dir)
         except:
             self.logger.error(
                 'Unable to clean MySQL data directory.',
@@ -224,8 +225,8 @@ class RestoreTool:
     def restore_base_backup(self, archive_path):
         self.stop_watch.start_timer()
         try:
-            command_executor.extract_archive(archive_path, '/var/lib/mysql')
-            command_executor.exec_backup_preparation('/var/lib/mysql', True)
+            command_executor.extract_archive(archive_path, self.data_dir)
+            command_executor.exec_backup_preparation(self.data_dir, True)
         except CalledProcessError as e:
             self.logger.error(
                 'An error occured during the base backup restoration process.',
@@ -265,7 +266,7 @@ class RestoreTool:
             command_executor.extract_archive(backup_archive,
                                              extracted_archive_path)
             command_executor.exec_incremental_preparation(
-                '/var/lib/mysql',
+                self.data_dir,
                 extracted_archive_path)
         except:
             self.logger.error(
@@ -281,7 +282,7 @@ class RestoreTool:
 
     def prepare_data_dir(self):
         try:
-            command_executor.exec_backup_preparation('/var/lib/mysql', False)
+            command_executor.exec_backup_preparation(self.data_dir, False)
         except:
             self.logger.error(
                 'An error occured during the backup final preparation.',
@@ -294,7 +295,7 @@ class RestoreTool:
 
     def set_data_dir_permissions(self):
         try:
-            command_executor.exec_chown('mysql', 'mysql', '/var/lib/mysql')
+            command_executor.exec_chown('mysql', 'mysql', self.data_dir)
         except:
             self.logger.error('Unable to reset MySQL data dir permissions.',
                               exc_info=True)
