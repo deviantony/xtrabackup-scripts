@@ -63,3 +63,11 @@ def exec_manage_service(service_name, action):
     subprocess.check_output([
         '/etc/init.d/' + service_name,
         action], stderr=subprocess.STDOUT)
+
+
+def exec_chown(user, group, directory_path):
+    subprocess.check_output([
+        '/bin/chown',
+        '-R',
+        user + ':' + group,
+        directory_path], stderr=subprocess.STDOUT)

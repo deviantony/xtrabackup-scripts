@@ -30,11 +30,13 @@ def main():
     arguments = docopt(__doc__, version='1.0')
     restore_tool = RestoreTool(arguments['--log-file'])
     try:
+        restore_tool.prepare_workdir(arguments['--tmp-dir'])
         restore_tool.stop_service()
         restore_tool.clean_data_dir()
-        restore_tool.restore_base_backup()
+        restore_tool.restore_base_backup(arguments['--base-archive'])
         restore_tool.restore_incremental_backups()
         restore_tool.prepare_data_dir()
+        restore_tool.set_data_dir_permissions()
         if arguments['--restart']:
             restore_tool.start_service()
         pass

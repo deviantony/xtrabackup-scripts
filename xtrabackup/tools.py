@@ -196,20 +196,30 @@ class RestoreTool:
         self.logger = logging.getLogger(__name__)
         self.log_manager.attach_file_handler(self.logger, log_file)
 
+    def prepare_workdir(self, path):
+        self.workdir = path + '/pyxtrabackup-restore'
+        filesystem_utils.mkdir_path(self.workdir, 0o755)
+        self.logger.debug("Temporary workdir: " + self.workdir)
+
     def stop_service(self):
         command_executor.exec_manage_service('mysql', 'stop')
 
     def clean_data_dir(self):
         filesystem_utils.clean_directory('/var/lib/mysql')
 
-    def restore_base_backup(self):
-        pass
+    def restore_base_backup(self, archive_path):
+        filesystem_utils.extract_archive(archive_path, '/var/lib/mysql')
+        command_executor.exec_backup_preparation('/var/lib/mysql', True)
 
     def restore_incremental_backups(self):
         pass
 
     def prepare_data_dir(self):
+        # command_executor.exec_backup_preparation('/var/lib/mysql', False)
         pass
+
+    def set_data_dir_permissions(self):
+        command_executor.exec_chown('mysql', 'mysql', '/var/lib/mysql')
 
     def start_service(self):
         command_executor.exec_manage_service('mysql', 'stop')
