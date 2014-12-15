@@ -183,3 +183,14 @@ class BackupTool:
                 exc_info=True)
             self.clean()
             raise
+
+    def start_full_backup(self, repository, workdir, user, password, threads):
+        self.check_prerequisites(repository)
+        self.prepare_workdir(workdir)
+        self.prepare_repository(repository, False)
+        self.exec_full_backup(user, password, threads)
+        self.prepare_backup(False)
+        self.compress_backup()
+        self.prepare_archive_name(False, False)
+        self.transfer_backup(repository)
+        self.clean()

@@ -26,17 +26,11 @@ def main():
     arguments = docopt(__doc__, version='1.0')
     backup_tool = BackupTool(arguments['--log-file'])
     try:
-        backup_tool.check_prerequisites(arguments['<repository>'])
-        backup_tool.prepare_workdir(arguments['--tmp-dir'])
-        backup_tool.prepare_repository(arguments['<repository>'], False)
-        backup_tool.exec_full_backup(arguments['--user'],
-                                     arguments['--password'],
-                                     arguments['--backup-threads'])
-        backup_tool.prepare_backup(False)
-        backup_tool.compress_backup()
-        backup_tool.prepare_archive_name(False, False)
-        backup_tool.transfer_backup(arguments['<repository>'])
-        backup_tool.clean()
+        backup_tool.start_full_backup(arguments['<repository>'],
+                                      arguments['--tmp-dir'],
+                                      arguments['--user'],
+                                      arguments['--password'],
+                                      arguments['--backup-threads'])
     except Exception:
         logger = logging.getLogger(__name__)
         logger.error("An error occured during the backup process.",
