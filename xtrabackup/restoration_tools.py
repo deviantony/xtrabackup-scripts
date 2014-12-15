@@ -135,7 +135,7 @@ class RestorationTool:
             raise
 
     def clean(self):
-        filesystem_utils.delete_directory(self.workdir)
+        filesystem_utils.delete_directory_if_exists(self.workdir)
 
     def start_restoration(self, base_archive, incremental_archive,
                           workdir, restart_service):

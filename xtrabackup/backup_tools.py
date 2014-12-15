@@ -142,7 +142,7 @@ class BackupTool:
                          self.stop_watch.duration_in_seconds())
 
     def clean(self):
-        filesystem_utils.delete_directory(self.workdir)
+        filesystem_utils.delete_directory_if_exists(self.workdir)
 
     def save_incremental_data(self, incremental):
         try:

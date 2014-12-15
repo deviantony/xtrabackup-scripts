@@ -68,8 +68,9 @@ def move_file(origin_path, destination_path):
     move(origin_path, destination_path)
 
 
-def delete_directory(path):
-    rmtree(path)
+def delete_directory_if_exists(path):
+    if (os.path.isdir(path)):
+        rmtree(path)
 
 
 def clean_directory(path):
