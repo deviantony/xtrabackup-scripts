@@ -67,7 +67,7 @@ class RestorationTool:
                 incremental_archive)
             incremental_target = int(archive_name.split('_')[1])
             for step in range(1, incremental_target + 1):
-                self.restore_incremental_backup(repository, step)
+                self.apply_incremental_backup(repository, step)
         except:
             self.logger.error(
                 'An error occured during the incremental\
@@ -76,7 +76,7 @@ class RestorationTool:
             self.clean()
             raise
 
-    def restore_incremental_backup(self, archive_repository, incremental_step):
+    def apply_incremental_backup(self, archive_repository, incremental_step):
         self.stop_watch.start_timer()
         try:
             prefix = ''.join(['inc_', str(incremental_step), '_'])
@@ -137,8 +137,8 @@ class RestorationTool:
     def clean(self):
         filesystem_utils.delete_directory(self.workdir)
 
-    def restore_incremental_cycle(self, base_archive, incremental_archive,
-                                  workdir, restart_service):
+    def start_restoration(self, base_archive, incremental_archive,
+                          workdir, restart_service):
         self.prepare_workdir(workdir)
         self.stop_service()
         self.clean_data_dir()
