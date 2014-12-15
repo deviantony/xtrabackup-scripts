@@ -31,17 +31,10 @@ def main():
     restore_tool = RestorationTool(arguments['--log-file'],
                                    arguments['--data-dir'])
     try:
-        restore_tool.prepare_workdir(arguments['--tmp-dir'])
-        restore_tool.stop_service()
-        restore_tool.clean_data_dir()
-        restore_tool.restore_base_backup(arguments['--base-archive'])
-        restore_tool.restore_incremental_backups(
-            arguments['--incremental-archive'])
-        restore_tool.prepare_data_dir()
-        restore_tool.set_data_dir_permissions()
-        restore_tool.clean()
-        if arguments['--restart']:
-            restore_tool.start_service()
+        restore_tool.restore_incremental_cycle(arguments['--base-archive'],
+                                               arguments['--incremental-archive'], 
+                                               arguments['--tmp-dir'],
+                                               arguments['--restart'])
     except Exception:
         logger = logging.getLogger(__name__)
         logger.error("An error occured during the restoration process.",

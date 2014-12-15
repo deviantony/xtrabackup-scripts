@@ -136,3 +136,16 @@ class RestorationTool:
 
     def clean(self):
         filesystem_utils.delete_directory(self.workdir)
+
+    def restore_incremental_cycle(self, base_archive, incremental_archive,
+                                  workdir, restart_service):
+        self.prepare_workdir(workdir)
+        self.stop_service()
+        self.clean_data_dir()
+        self.restore_base_backup(base_archive)
+        self.restore_incremental_backups(incremental_archive)
+        self.prepare_data_dir()
+        self.set_data_dir_permissions()
+        self.clean()
+        if restart_service:
+            self.start_service()
