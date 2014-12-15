@@ -194,3 +194,19 @@ class BackupTool:
         self.prepare_archive_name(False, False)
         self.transfer_backup(repository)
         self.clean()
+
+    def start_incremental_backup(self, repository, incremental,
+                                 workdir, user, password, threads):
+        self.check_prerequisites(repository)
+        self.prepare_workdir(workdir)
+        self.prepare_repository(repository, True)
+        if incremental:
+            self.load_incremental_data()
+            self.exec_incremental_backup(user, password, threads)
+        else:
+            self.exec_full_backup(user, password, threads)
+        self.save_incremental_data(incremental)
+        self.compress_backup()
+        self.prepare_archive_name(incremental, True)
+        self.transfer_backup(repository)
+        self.clean()
