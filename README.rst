@@ -9,7 +9,7 @@ pyxtrabackup
 Work in progress
 ================
 
-The tool is currently in 3.0.0-BETA2 version and allows to create full and incremental backups.
+The tool is currently in 3.0.0-BETA3 version and allows to create full and incremental backups.
 
 I'm still wondering if I should re-implement the streamed backup feature. If you think I should, please open an issue.
 
@@ -47,6 +47,7 @@ You can also specify the following options:
 
 * --tmp-dir: Specify the temporary directory used by the script. (default: */tmp*).
 * --log-file: Log file for the script (default: */var/log/pyxtrabackup.log*).
+* --out-file: Log file for innobackupex output (default: */var/log/xtrabackup.out*).
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
 
 
@@ -90,7 +91,8 @@ Additional options
 You can also specify the following options:
 
 * --tmp-dir: Specify the temporary directory used by the script. (default: */tmp*).
-* --log-file: Log file for the script (default: */var/log/pyxtrabackup.log*).
+* --log-file: Log file for the script (default: */var/log/pyxtrabackup-inc.log*).
+* --out-file: Log file for innobackupex output (default: */var/log/xtrabackup.out*).
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
 
 
@@ -123,7 +125,8 @@ You can also specify the following options:
 * --data-dir: MySQL datadir. (default: */var/lib/mysql*)
 * --restart: Restart the MySQL service after restoration.
 * --tmp-dir: Specify the temporary directory used by the script. (default: */tmp*).
-* --log-file: Log file for the script (default: */var/log/pyxtrabackup.log*).
+* --log-file: Log file for the script (default: */var/log/pyxtrabackup-restore.log*).
+* --out-file: Log file for innobackupex output (default: */var/log/xtrabackup.out*).
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
 
 Limitations
