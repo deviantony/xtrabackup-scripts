@@ -1,7 +1,7 @@
 """Xtrabackup script
 
 Usage:
-    pyxtrabackup-inc <repository> --user=<user> [--password=<pwd>] [--incremental] [--tmp-dir=<tmp>] [--log-file=<log>] [--err-file=<log>] [--backup-threads=<threads>] 
+    pyxtrabackup-inc <repository> --user=<user> [--password=<pwd>] [--incremental] [--tmp-dir=<tmp>] [--log-file=<log>] [--out-file=<log>] [--backup-threads=<threads>] 
     pyxtrabackup-inc (-h | --help)
     pyxtrabackup --version
 
@@ -14,7 +14,7 @@ Options:
     --incremental               Start an incremental cycle.
     --tmp-dir=<tmp>             Temporary directory [default: /tmp].
     --log-file=<log>            Log file [default: /var/log/pyxtrabackup.log].
-    --err-file=<log>            Error file [default: /var/log/pyxtrabackup.err].
+    --out-file=<log>            Output file [default: /var/log/xtrabackup.out].    
     --backup-threads=<threads>  Threads count [default: 1].
 
 """
@@ -26,7 +26,7 @@ from xtrabackup.backup_tools import BackupTool
 
 def main():
     arguments = docopt(__doc__, version='1.0')
-    backup_tool = BackupTool(arguments['--log-file'], arguments['--err-file'])
+    backup_tool = BackupTool(arguments['--log-file'], arguments['--out-file'])
     try:
         backup_tool.start_incremental_backup(arguments['<repository>'],
                                              arguments['--incremental'],

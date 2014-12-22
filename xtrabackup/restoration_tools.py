@@ -8,12 +8,12 @@ import logging
 
 class RestorationTool:
 
-    def __init__(self, log_file, error_file, data_dir):
+    def __init__(self, log_file, output_file, data_dir):
         self.log_manager = log_manager.LogManager()
         self.data_dir = data_dir
         self.stop_watch = timer.Timer()
         self.setup_logging(log_file)
-        self.command_executor = CommandExecutor(error_file)
+        self.command_executor = CommandExecutor(output_file)
 
     def setup_logging(self, log_file):
         self.logger = logging.getLogger(__name__)

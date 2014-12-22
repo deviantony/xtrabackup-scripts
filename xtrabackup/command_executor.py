@@ -4,11 +4,11 @@ from xtrabackup.exception import ProcessError
 
 class CommandExecutor:
 
-    def __init__(self, error_file_path):
-        self.error_file_path = error_file_path
+    def __init__(self, output_file_path):
+        self.output_file_path = output_file_path
 
     def exec_command(self, command):
-        with open(self.error_file_path, 'a+') as error_file:
+        with open(self.output_file_path, 'a+') as error_file:
             process = subprocess.Popen(command, stdout=error_file,
                                        stderr=subprocess.STDOUT)
             process.communicate()
