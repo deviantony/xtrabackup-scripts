@@ -1,7 +1,7 @@
 """Xtrabackup script
 
 Usage:
-    pyxtrabackup <repository> --user=<user> [--password=<pwd>] [--tmp-dir=<tmp>] [--log-file=<log>] [--backup-threads=<threads>] 
+    pyxtrabackup <repository> --user=<user> [--password=<pwd>] [--tmp-dir=<tmp>] [--log-file=<log>] [--out-file=<log>] [--backup-threads=<threads>] 
     pyxtrabackup (-h | --help)
     pyxtrabackup --version
 
@@ -11,8 +11,9 @@ Options:
     --version                   Show version.
     --user=<user>               MySQL user.
     --password=<pwd>            MySQL password.
-    --tmp-dir=<tmp>             Temporart directory [default: /tmp].
+    --tmp-dir=<tmp>             Temporary directory [default: /tmp].
     --log-file=<log>            Log file [default: /var/log/pyxtrabackup.log].
+    --out-file=<log>            Output file [default: /var/log/xtrabackup.out].    
     --backup-threads=<threads>  Threads count [default: 1].
 
 """
@@ -24,7 +25,7 @@ from xtrabackup.backup_tools import BackupTool
 
 def main():
     arguments = docopt(__doc__, version='1.0')
-    backup_tool = BackupTool(arguments['--log-file'])
+    backup_tool = BackupTool(arguments['--log-file'], arguments['--out-file'])
     try:
         backup_tool.start_full_backup(arguments['<repository>'],
                                       arguments['--tmp-dir'],
@@ -33,8 +34,7 @@ def main():
                                       arguments['--backup-threads'])
     except Exception:
         logger = logging.getLogger(__name__)
-        logger.error("An error occured during the backup process.",
-                     exc_info=True)
+        logger.error("pyxtrabackup failed.")
         exit(1)
     exit(0)
 
