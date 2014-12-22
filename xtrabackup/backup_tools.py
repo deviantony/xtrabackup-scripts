@@ -1,12 +1,10 @@
 from xtrabackup.command_executor import CommandExecutor
+from xtrabackup.exception import ProcessError
 import xtrabackup.filesystem_utils as filesystem_utils
 import xtrabackup.log_manager as log_manager
 import xtrabackup.exception as exception
 import xtrabackup.timer as timer
 import logging
-from subprocess import CalledProcessError
-from xtrabackup.exception import CommandError
-from sys import stdout
 
 
 class BackupTool:
@@ -64,12 +62,10 @@ class BackupTool:
                 thread_count,
                 self.last_lsn,
                 self.workdir)
-        except CalledProcessError as e:
+        except ProcessError:
             self.logger.error(
                 'An error occured during the incremental backup process.',
                 exc_info=True)
-            self.logger.error(
-                'Command output: %s', e.output.decode(stdout.encoding))
             self.clean()
             raise
         self.logger.info("Incremental backup time: %s - Duration: %s",
@@ -84,7 +80,7 @@ class BackupTool:
                 password,
                 thread_count,
                 self.workdir)
-        except CommandError:
+        except ProcessError:
             self.logger.error(
                 'An error occured during the backup process.', exc_info=True)
             self.clean()
@@ -98,12 +94,10 @@ class BackupTool:
         try:
             self.command_executor.exec_backup_preparation(self.workdir,
                                                           redo_logs)
-        except CalledProcessError as e:
+        except ProcessError:
             self.logger.error(
                 'An error occured during the preparation process.',
                 exc_info=True)
-            self.logger.error(
-                'Command output: %s', e.output.decode(stdout.encoding))
             self.clean()
             raise
         self.logger.info("Backup preparation time: %s - Duration: %s",
@@ -115,12 +109,10 @@ class BackupTool:
         try:
             self.command_executor.create_archive(
                 self.workdir, self.archive_path)
-        except CalledProcessError as e:
+        except ProcessError:
             self.logger.error(
                 'An error occured during the backup compression.',
                 exc_info=True)
-            self.logger.error('Command output: %s',
-                              e.output.decode(stdout.encoding))
             self.clean()
             raise
         self.logger.info("Backup compression time: %s - Duration: %s",

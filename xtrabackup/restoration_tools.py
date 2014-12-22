@@ -1,10 +1,9 @@
 from xtrabackup.command_executor import CommandExecutor
+from xtrabackup.exception import ProcessError
 import xtrabackup.filesystem_utils as filesystem_utils
 import xtrabackup.log_manager as log_manager
 import xtrabackup.timer as timer
 import logging
-from subprocess import CalledProcessError
-from sys import stdout
 
 
 class RestorationTool:
@@ -50,12 +49,10 @@ class RestorationTool:
         try:
             self.command_executor.extract_archive(archive_path, self.data_dir)
             self.command_executor.exec_backup_preparation(self.data_dir, True)
-        except CalledProcessError as e:
+        except ProcessError:
             self.logger.error(
                 'An error occured during the base backup restoration process.',
                 exc_info=True)
-            self.logger.error(
-                'Command output: %s', e.output.decode(stdout.encoding))
             self.clean()
             raise
         self.logger.info("Base backup restoration time: %s - Duration: %s",

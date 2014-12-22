@@ -1,5 +1,5 @@
 import subprocess
-from xtrabackup.exception import CommandError
+from xtrabackup.exception import ProcessError
 
 
 class CommandExecutor:
@@ -13,7 +13,7 @@ class CommandExecutor:
                                        stderr=subprocess.STDOUT)
             process.communicate()
             if process.returncode != 0:
-                raise CommandError(command, process.returncode)
+                raise ProcessError(command, process.returncode)
 
     def exec_filesystem_backup(self, user, password,
                                threads, backup_directory):

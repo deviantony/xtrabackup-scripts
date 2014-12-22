@@ -4,11 +4,11 @@ class ProgramError(Exception):
         super(ProgramError, self).__init__(message)
 
 
-class CommandError(Exception):
+class ProcessError(Exception):
 
     def __init__(self, command, returncode):
         message = ("The following command failed : %s"
                    " - Status code: %d" % (command, returncode))
-        super(CommandError, self).__init__(message)
+        super(ProcessError, self).__init__(message)
         self.command = command
         self.returncode = returncode
