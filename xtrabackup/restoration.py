@@ -39,8 +39,7 @@ def main():
                                        arguments['--restart'])
     except Exception:
         logger = logging.getLogger(__name__)
-        logger.error("An error occured during the restoration process.",
-                     exc_info=True)
+        logger.error("pyxtrabackup failed.")
         exit(1)
     exit(0)
 
