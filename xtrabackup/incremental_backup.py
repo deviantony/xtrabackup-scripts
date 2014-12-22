@@ -14,6 +14,7 @@ Options:
     --incremental               Start an incremental cycle.
     --tmp-dir=<tmp>             Temporary directory [default: /tmp].
     --log-file=<log>            Log file [default: /var/log/pyxtrabackup.log].
+    --err-file=<log>            Log file [default: /var/log/pyxtrabackup.err].
     --backup-threads=<threads>  Threads count [default: 1].
 
 """
