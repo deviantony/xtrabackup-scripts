@@ -25,7 +25,7 @@ from xtrabackup.backup_tools import BackupTool
 
 def main():
     arguments = docopt(__doc__, version='1.0')
-    backup_tool = BackupTool(arguments['--log-file'])
+    backup_tool = BackupTool(arguments['--log-file'], arguments['--err-file'])
     try:
         backup_tool.start_incremental_backup(arguments['<repository>'],
                                              arguments['--incremental'],
