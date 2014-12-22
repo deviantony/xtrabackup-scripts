@@ -7,7 +7,7 @@ __title__ = "pyxtrabackup"
 __summary__ = "Percona Xtrabackup python wrapper"
 __uri__ = "https://github.com/deviantony/xtrabackup-scripts"
 
-__version__ = "3.0.0b2"
+__version__ = "3.0.0b3"
 
 __author__ = "Anthony Lapenna"
 __email__ = "lapenna.anthony@gmail.com"
