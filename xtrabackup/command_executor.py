@@ -30,74 +30,60 @@ class CommandExecutor:
 
     def exec_incremental_backup(self, user, password,
                                 threads, lsn, backup_directory):
+        command = [
+            'innobackupex',
+            '--user=' + user,
+            '--parallel=' + threads,
+            '--incremental',
+            '--incremental-lsn=' + lsn,
+            '--no-lock',
+            '--no-timestamp',
+            backup_directory]
         if password:
-            subprocess.check_output([
-                'innobackupex',
-                '--user=' + user,
-                '--password=' + password,
-                '--parallel=' + threads,
-                '--incremental',
-                '--incremental-lsn=' + lsn,
-                '--no-lock',
-                '--no-timestamp',
-                backup_directory], stderr=subprocess.STDOUT)
-        else:
-            subprocess.check_output([
-                'innobackupex',
-                '--user=' + user,
-                '--parallel=' + threads,
-                '--incremental',
-                '--incremental-lsn=' + lsn,
-                '--no-lock',
-                '--no-timestamp',
-                backup_directory], stderr=subprocess.STDOUT)
+            command.append('--password=' + password)
+        self.exec_command(command)
 
     def exec_backup_preparation(self, backup_directory, redo_logs):
+        command = [
+            'innobackupex',
+            '--apply-log',
+            backup_directory]
         if redo_logs:
-            subprocess.check_output([
-                'innobackupex',
-                '--apply-log',
-                '--redo-only',
-                backup_directory], stderr=subprocess.STDOUT)
-        else:
-            subprocess.check_output([
-                'innobackupex',
-                '--apply-log',
-                backup_directory], stderr=subprocess.STDOUT)
+            command.append('--redo-only')
+        self.exec_command(command)
 
     def exec_incremental_preparation(self, backup_directory,
                                      incremental_directory):
-        subprocess.check_output([
+        command = [
             'innobackupex',
             '--apply-log',
             '--redo-only',
             '--incremental-dir=' + incremental_directory,
-            backup_directory], stderr=subprocess.STDOUT)
+            backup_directory]
+        self.exec_command(command)
 
     def exec_manage_service(self, service_name, action):
-        subprocess.check_output([
-            '/etc/init.d/' + service_name,
-            action], stderr=subprocess.STDOUT)
+        command = ['/etc/init.d/' + service_name, action]
+        self.exec_command(command)
 
     def exec_chown(self, user, group, directory_path):
-        subprocess.check_output([
-            '/bin/chown',
-            '-R',
-            user + ':' + group,
-            directory_path], stderr=subprocess.STDOUT)
+        command = ['/bin/chown', '-R', user + ':' + group, directory_path]
+        self.exec_command(command)
 
     def create_archive(self, directory, archive_path):
-        subprocess.check_output([
+        command = [
             'tar',
             'cpvzf',
             archive_path,
             '-C',
-            directory, '.'], stderr=subprocess.STDOUT)
+            directory, '.']
+        self.exec_command(command)
 
     def extract_archive(self, archive_path, destination_path):
-        subprocess.check_output([
+        command = [
             'tar',
             'xpvzf',
             archive_path,
             '-C',
-            destination_path], stderr=subprocess.STDOUT)
+            destination_path]
+        self.exec_command(command)
