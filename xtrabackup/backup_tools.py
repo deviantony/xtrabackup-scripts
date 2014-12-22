@@ -1,4 +1,4 @@
-import xtrabackup.command_executor as command_executor
+from xtrabackup.command_executor import CommandExecutor
 import xtrabackup.filesystem_utils as filesystem_utils
 import xtrabackup.log_manager as log_manager
 import xtrabackup.exception as exception
@@ -15,6 +15,7 @@ class BackupTool:
         self.log_manager = log_manager.LogManager()
         self.stop_watch = timer.Timer()
         self.setup_logging(log_file)
+        self.command_executor = CommandExecutor()
 
     def setup_logging(self, log_file):
         self.logger = logging.getLogger(__name__)
@@ -57,7 +58,7 @@ class BackupTool:
     def exec_incremental_backup(self, user, password, thread_count):
         self.stop_watch.start_timer()
         try:
-            command_executor.exec_incremental_backup(
+            self.command_executor.exec_incremental_backup(
                 user,
                 password,
                 thread_count,
@@ -78,7 +79,7 @@ class BackupTool:
     def exec_full_backup(self, user, password, thread_count):
         self.stop_watch.start_timer()
         try:
-            command_executor.exec_enhanced_fs_backup(
+            self.command_executor.exec_enhanced_fs_backup(
                 user,
                 password,
                 thread_count,
@@ -95,7 +96,8 @@ class BackupTool:
     def prepare_backup(self, redo_logs):
         self.stop_watch.start_timer()
         try:
-            command_executor.exec_backup_preparation(self.workdir, redo_logs)
+            self.command_executor.exec_backup_preparation(self.workdir,
+                                                          redo_logs)
         except CalledProcessError as e:
             self.logger.error(
                 'An error occured during the preparation process.',
@@ -111,7 +113,8 @@ class BackupTool:
     def compress_backup(self):
         self.stop_watch.start_timer()
         try:
-            command_executor.create_archive(self.workdir, self.archive_path)
+            self.command_executor.create_archive(
+                self.workdir, self.archive_path)
         except CalledProcessError as e:
             self.logger.error(
                 'An error occured during the backup compression.',
