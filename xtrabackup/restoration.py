@@ -1,7 +1,7 @@
 """Xtrabackup script
 
 Usage:
-    pyxtrabackup-restore --base-archive=<base_archive_path> --incremental-archive=<incremental_archive_path> --user=<user> [--password=<pwd>] [--data-dir=<data_dir>] [--restart] [--tmp-dir=<tmp>] [--log-file=<log>] [--backup-threads=<threads>]
+    pyxtrabackup-restore --base-archive=<base_archive_path> --incremental-archive=<incremental_archive_path> --user=<user> [--password=<pwd>] [--data-dir=<data_dir>] [--restart] [--tmp-dir=<tmp>] [--log-file=<log>] [--err-file=<log>] [--backup-threads=<threads>]
     pyxtrabackup-restore (-h | --help)
     pyxtrabackup --version
 
@@ -17,6 +17,7 @@ Options:
     --restart                                   Restart the server after backup restoration.
     --tmp-dir=<tmp>                             Temporary directory [default: /tmp].
     --log-file=<log>                            Log file [default: /var/log/pyxtrabackup-restore.log].
+    --err-file=<log>                            Error file [default: /var/log/pyxtrabackup.err].
     --backup-threads=<threads>                  Threads count [default: 1].
 
 """
@@ -29,6 +30,7 @@ from xtrabackup.restoration_tools import RestorationTool
 def main():
     arguments = docopt(__doc__, version='1.0')
     restore_tool = RestorationTool(arguments['--log-file'],
+                                   arguments['--err-file'],
                                    arguments['--data-dir'])
     try:
         restore_tool.start_restoration(arguments['--base-archive'],
