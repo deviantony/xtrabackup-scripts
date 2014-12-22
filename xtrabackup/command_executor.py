@@ -1,7 +1,32 @@
 import subprocess
+from xtrabackup.exception import CommandError
+
+
+def exec_enhanced_fs_backup(user, password, threads, backup_directory):
+    #this part requires a function
+    command = [
+        'innobackupex',
+        '--user=' + user,
+        '--parallel=' + threads,
+        '--no-lock',
+        '--no-timestamp',
+        backup_directory]
+
+    #of course log file needs to be injected (error file?
+    # different from log file.)
+    log = open('/var/log/pyxtrabackup.log', 'a')
+
+    #this part should be generic (private method)
+    process = subprocess.Popen(command,
+                               stdout=log,
+                               stderr=log)
+    process.communicate()
+    if process.returncode != 0:
+        raise CommandError(command, process.returncode)
 
 
 def exec_filesystem_backup(user, password, threads, backup_directory):
+    log = open('/var/log/pyxtrabackup.log', 'a')
     if password:
         subprocess.check_output([
             'innobackupex',
@@ -18,7 +43,7 @@ def exec_filesystem_backup(user, password, threads, backup_directory):
             '--parallel=' + threads,
             '--no-lock',
             '--no-timestamp',
-            backup_directory], stderr=subprocess.STDOUT)
+            backup_directory], stderr=log)
 
 
 def exec_incremental_backup(user, password, threads, lsn, backup_directory):

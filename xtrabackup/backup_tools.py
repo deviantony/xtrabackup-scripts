@@ -5,6 +5,7 @@ import xtrabackup.exception as exception
 import xtrabackup.timer as timer
 import logging
 from subprocess import CalledProcessError
+from xtrabackup.exception import CommandError
 from sys import stdout
 
 
@@ -77,16 +78,14 @@ class BackupTool:
     def exec_full_backup(self, user, password, thread_count):
         self.stop_watch.start_timer()
         try:
-            command_executor.exec_filesystem_backup(
+            command_executor.exec_enhanced_fs_backup(
                 user,
                 password,
                 thread_count,
                 self.workdir)
-        except CalledProcessError as e:
+        except CommandError:
             self.logger.error(
                 'An error occured during the backup process.', exc_info=True)
-            self.logger.error(
-                'Command output: %s', e.output.decode(stdout.encoding))
             self.clean()
             raise
         self.logger.info("Backup time: %s - Duration: %s",

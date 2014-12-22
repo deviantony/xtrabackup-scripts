@@ -33,8 +33,7 @@ def main():
                                       arguments['--backup-threads'])
     except Exception:
         logger = logging.getLogger(__name__)
-        logger.error("An error occured during the backup process.",
-                     exc_info=True)
+        logger.error("An error occured during the backup process.")
         exit(1)
     exit(0)
 
