@@ -11,11 +11,11 @@ from sys import stdout
 
 class BackupTool:
 
-    def __init__(self, log_file):
+    def __init__(self, log_file, error_file):
         self.log_manager = log_manager.LogManager()
         self.stop_watch = timer.Timer()
         self.setup_logging(log_file)
-        self.command_executor = CommandExecutor()
+        self.command_executor = CommandExecutor(error_file)
 
     def setup_logging(self, log_file):
         self.logger = logging.getLogger(__name__)

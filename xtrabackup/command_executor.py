@@ -4,9 +4,19 @@ from xtrabackup.exception import CommandError
 
 class CommandExecutor:
 
+    def __init__(self, error_file_path):
+        self.error_file_path = error_file_path
+
+    def exec_command(self, command):
+        with open(self.error_file_path, 'a+') as error_file:
+            process = subprocess.Popen(command, stdout=error_file,
+                                       stderr=subprocess.STDOUT)
+            process.communicate()
+            if process.returncode != 0:
+                raise CommandError(command, process.returncode)
+
     def exec_enhanced_fs_backup(self, user, password,
                                 threads, backup_directory):
-        # this part requires a function
         command = [
             'innobackupex',
             '--user=' + user,
@@ -14,18 +24,7 @@ class CommandExecutor:
             '--no-lock',
             '--no-timestamp',
             backup_directory]
-
-        # of course log file needs to be injected (error file?
-        # different from log file.)
-        log = open('/var/log/pyxtrabackup.log', 'a')
-
-        # this part should be generic (private method)
-        process = subprocess.Popen(command,
-                                   stdout=log,
-                                   stderr=log)
-        process.communicate()
-        if process.returncode != 0:
-            raise CommandError(command, process.returncode)
+        self.exec_command(command)
 
     def exec_filesystem_backup(self, user, password,
                                threads, backup_directory):
