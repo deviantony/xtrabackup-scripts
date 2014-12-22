@@ -15,8 +15,8 @@ class CommandExecutor:
             if process.returncode != 0:
                 raise CommandError(command, process.returncode)
 
-    def exec_enhanced_fs_backup(self, user, password,
-                                threads, backup_directory):
+    def exec_filesystem_backup(self, user, password,
+                               threads, backup_directory):
         command = [
             'innobackupex',
             '--user=' + user,
@@ -24,28 +24,9 @@ class CommandExecutor:
             '--no-lock',
             '--no-timestamp',
             backup_directory]
-        self.exec_command(command)
-
-    def exec_filesystem_backup(self, user, password,
-                               threads, backup_directory):
-        log = open('/var/log/pyxtrabackup.log', 'a')
         if password:
-            subprocess.check_output([
-                'innobackupex',
-                '--user=' + user,
-                '--password=' + password,
-                '--parallel=' + threads,
-                '--no-lock',
-                '--no-timestamp',
-                backup_directory], stderr=subprocess.STDOUT)
-        else:
-            subprocess.check_output([
-                'innobackupex',
-                '--user=' + user,
-                '--parallel=' + threads,
-                '--no-lock',
-                '--no-timestamp',
-                backup_directory], stderr=log)
+            command.append('--password=' + password)
+        self.exec_command(command)
 
     def exec_incremental_backup(self, user, password,
                                 threads, lsn, backup_directory):

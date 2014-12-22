@@ -79,7 +79,7 @@ class BackupTool:
     def exec_full_backup(self, user, password, thread_count):
         self.stop_watch.start_timer()
         try:
-            self.command_executor.exec_enhanced_fs_backup(
+            self.command_executor.exec_filesystem_backup(
                 user,
                 password,
                 thread_count,

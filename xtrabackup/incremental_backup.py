@@ -1,7 +1,7 @@
 """Xtrabackup script
 
 Usage:
-    pyxtrabackup-inc <repository> --user=<user> [--password=<pwd>] [--incremental] [--tmp-dir=<tmp>] [--log-file=<log>] [--backup-threads=<threads>] 
+    pyxtrabackup-inc <repository> --user=<user> [--password=<pwd>] [--incremental] [--tmp-dir=<tmp>] [--log-file=<log>] [--err-file=<log>] [--backup-threads=<threads>] 
     pyxtrabackup-inc (-h | --help)
     pyxtrabackup --version
 
