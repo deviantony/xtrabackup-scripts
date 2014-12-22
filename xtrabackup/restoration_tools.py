@@ -1,4 +1,4 @@
-import xtrabackup.command_executor as command_executor
+from xtrabackup.command_executor import CommandExecutor
 import xtrabackup.filesystem_utils as filesystem_utils
 import xtrabackup.log_manager as log_manager
 import xtrabackup.timer as timer
@@ -9,11 +9,12 @@ from sys import stdout
 
 class RestorationTool:
 
-    def __init__(self, log_file, data_dir):
+    def __init__(self, log_file, error_file, data_dir):
         self.log_manager = log_manager.LogManager()
         self.data_dir = data_dir
         self.stop_watch = timer.Timer()
         self.setup_logging(log_file)
+        self.command_executor = CommandExecutor(error_file)
 
     def setup_logging(self, log_file):
         self.logger = logging.getLogger(__name__)
@@ -26,7 +27,7 @@ class RestorationTool:
 
     def stop_service(self):
         try:
-            command_executor.exec_manage_service('mysql', 'stop')
+            self.command_executor.exec_manage_service('mysql', 'stop')
         except:
             self.logger.error(
                 'Unable to manage MySQL service.',
@@ -47,8 +48,8 @@ class RestorationTool:
     def restore_base_backup(self, archive_path):
         self.stop_watch.start_timer()
         try:
-            command_executor.extract_archive(archive_path, self.data_dir)
-            command_executor.exec_backup_preparation(self.data_dir, True)
+            self.command_executor.extract_archive(archive_path, self.data_dir)
+            self.command_executor.exec_backup_preparation(self.data_dir, True)
         except CalledProcessError as e:
             self.logger.error(
                 'An error occured during the base backup restoration process.',
@@ -85,9 +86,9 @@ class RestorationTool:
             extracted_archive_path = ''.join([self.workdir, '/',
                                               prefix, 'archive'])
             filesystem_utils.mkdir_path(extracted_archive_path, 0o755)
-            command_executor.extract_archive(backup_archive,
-                                             extracted_archive_path)
-            command_executor.exec_incremental_preparation(
+            self.command_executor.extract_archive(backup_archive,
+                                                  extracted_archive_path)
+            self.command_executor.exec_incremental_preparation(
                 self.data_dir,
                 extracted_archive_path)
         except:
@@ -104,7 +105,7 @@ class RestorationTool:
 
     def prepare_data_dir(self):
         try:
-            command_executor.exec_backup_preparation(self.data_dir, False)
+            self.command_executor.exec_backup_preparation(self.data_dir, False)
         except:
             self.logger.error(
                 'An error occured during the backup final preparation.',
@@ -117,7 +118,7 @@ class RestorationTool:
 
     def set_data_dir_permissions(self):
         try:
-            command_executor.exec_chown('mysql', 'mysql', self.data_dir)
+            self.command_executor.exec_chown('mysql', 'mysql', self.data_dir)
         except:
             self.logger.error('Unable to reset MySQL data dir permissions.',
                               exc_info=True)
@@ -126,7 +127,7 @@ class RestorationTool:
 
     def start_service(self):
         try:
-            command_executor.exec_manage_service('mysql', 'start')
+            self.command_executor.exec_manage_service('mysql', 'start')
         except:
             self.logger.error(
                 'Unable to manage MySQL service.',
