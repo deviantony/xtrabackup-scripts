@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y mysql-server percona-xtrabackup
 
 ADD requirements.txt /tmp/requirements.txt
 RUN /bin/zsh -c 'source ~/.zshrc; workon python3; pip install -r /tmp/requirements.txt'
+RUN /bin/zsh -c 'source ~/.zshrc; workon python2.7; pip install -r /tmp/requirements.txt'
 
 RUN echo "export PYTHONPATH=${PYTHONPATH}:/python" >> /root/.zshrc
 
