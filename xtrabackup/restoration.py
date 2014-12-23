@@ -16,8 +16,8 @@ Options:
     --data-dir=<data_dir>                       MySQL server data directory [default: /var/lib/mysql]
     --restart                                   Restart the server after backup restoration.
     --tmp-dir=<tmp>                             Temporary directory [default: /tmp].
-    --log-file=<log>                            Log file [default: /var/log/pyxtrabackup-restore.log].
-    --out-file=<log>                            Output file [default: /var/log/xtrabackup.out].
+    --log-file=<log>                            Log file [default: /var/log/mysql/pyxtrabackup-restore.log].
+    --out-file=<log>                            Output file [default: /var/log/mysql/xtrabackup.out].
     --backup-threads=<threads>                  Threads count [default: 1].
 
 """

@@ -12,8 +12,8 @@ Options:
     --user=<user>               MySQL user.
     --password=<pwd>            MySQL password.
     --tmp-dir=<tmp>             Temporary directory [default: /tmp].
-    --log-file=<log>            Log file [default: /var/log/pyxtrabackup.log].
-    --out-file=<log>            Output file [default: /var/log/xtrabackup.out].    
+    --log-file=<log>            Log file [default: /var/log/mysql/pyxtrabackup.log].
+    --out-file=<log>            Output file [default: /var/log/mysql/xtrabackup.out].    
     --backup-threads=<threads>  Threads count [default: 1].
 
 """
