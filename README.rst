@@ -38,7 +38,7 @@ $ pyxtrabackup <PATH TO REPOSITORY> --user=<MYSQL USER> [ --password=<MYSQL PASS
 
 Usage in a cron file::
 
-@midnight    mysql    /usr/local/bin/pyxtrabackup /mnt/myrepo --user=backup-user --password=changeme --log-file=/var/log/mysql/pyxtrabackup.log 2>&1
+@midnight    mysql    /usr/local/bin/pyxtrabackup /mnt/myrepo --user=backup-user --password=changeme
 
 Additional options
 ^^^^^^^^^^^^^^^^^^
@@ -46,8 +46,8 @@ Additional options
 You can also specify the following options:
 
 * --tmp-dir: Specify the temporary directory used by the script. (default: */tmp*).
-* --log-file: Log file for the script (default: */var/log/pyxtrabackup.log*).
-* --out-file: Log file for innobackupex output (default: */var/log/xtrabackup.out*).
+* --log-file: Log file for the script (default: */var/log/mysql/pyxtrabackup.log*).
+* --out-file: Log file for innobackupex output (default: */var/log/mysql/xtrabackup.out*).
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
 
 
@@ -91,8 +91,8 @@ Additional options
 You can also specify the following options:
 
 * --tmp-dir: Specify the temporary directory used by the script. (default: */tmp*).
-* --log-file: Log file for the script (default: */var/log/pyxtrabackup-inc.log*).
-* --out-file: Log file for innobackupex output (default: */var/log/xtrabackup.out*).
+* --log-file: Log file for the script (default: */var/log/mysql/pyxtrabackup-inc.log*).
+* --out-file: Log file for innobackupex output (default: */var/log/mysql/xtrabackup.out*).
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
 
 
@@ -125,8 +125,8 @@ You can also specify the following options:
 * --data-dir: MySQL datadir. (default: */var/lib/mysql*)
 * --restart: Restart the MySQL service after restoration.
 * --tmp-dir: Specify the temporary directory used by the script. (default: */tmp*).
-* --log-file: Log file for the script (default: */var/log/pyxtrabackup-restore.log*).
-* --out-file: Log file for innobackupex output (default: */var/log/xtrabackup.out*).
+* --log-file: Log file for the script (default: */var/log/mysql/pyxtrabackup-restore.log*).
+* --out-file: Log file for innobackupex output (default: */var/log/mysql/xtrabackup.out*).
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
 
 Limitations
