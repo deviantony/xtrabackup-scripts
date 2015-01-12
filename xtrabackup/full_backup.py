@@ -24,7 +24,7 @@ from xtrabackup.backup_tools import BackupTool
 
 
 def main():
-    arguments = docopt(__doc__, version='1.0')
+    arguments = docopt(__doc__, version='3.0.0')
     backup_tool = BackupTool(arguments['--log-file'], arguments['--out-file'])
     try:
         backup_tool.start_full_backup(arguments['<repository>'],
