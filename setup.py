@@ -28,8 +28,6 @@ setup(
     license=about["__license__"],
 
     classifiers=[
-        'Development Status :: 4 - Beta',
-
         'Intended Audience :: System Administrators',
         'Topic :: System :: Archiving :: Backup',
 
