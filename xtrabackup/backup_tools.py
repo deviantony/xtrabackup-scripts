@@ -199,6 +199,7 @@ class BackupTool:
             self.prepare_archive_name(incremental, True)
             self.exec_incremental_backup(user, password, threads)
         else:
+            self.prepare_archive_name(incremental, True)
             self.exec_full_backup(user, password, threads)
         self.save_incremental_data(incremental)
         self.compress_backup()
