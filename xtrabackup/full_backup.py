@@ -15,7 +15,7 @@ Options:
     --log-file=<log>            Log file [default: /var/log/mysql/pyxtrabackup.log].
     --out-file=<log>            Output file [default: /var/log/mysql/xtrabackup.out].    
     --backup-threads=<threads>  Threads count [default: 1].
-    --no-compress               Do not create a compressed archive of the backup [default: false].
+    --no-compress               Do not create a compressed archive of the backup.
 
 """
 from docopt import docopt

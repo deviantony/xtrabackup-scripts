@@ -46,18 +46,27 @@ You can also specify the following options:
 * --log-file: Log file for the script (default: */var/log/mysql/pyxtrabackup.log*).
 * --out-file: Log file for innobackupex output (default: */var/log/mysql/xtrabackup.out*).
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
-
+* --no-compress: Do not compress the backup archive.
 
 Restoration
 -----------
 
-The archive is containing a binary backup of a MySQL server, all you need to do in order to restore the backup is to extract the content of the archive in your MySQL datadir, setup the permissions for the files and start your server:
+The archive is containing a binary backup of a MySQL server, all you need to do in order to restore the backup is to extract the content of the archive in your MySQL datadir, setup the permissions for the files and start your server.
 
-::
+Clean the MySQL datadir::
 
 $ sudo rm -rf /path/to/mysql/datadir/*
+
+If you compressed the archive, uncompress and extract it::
+
 $ sudo tar xvpzf /path/to/backup_archive.tar.gz -C /path/to/mysql/datadir
-$ sudo chown -R mysql:mysql /path/to/mysql/datadir
+
+Otherwise you just need to extract it::
+
+$ sudo tar xvpf /path/to/backup_archive.tar -C /path/to/mysql/datadir
+
+Then restart your MySQL server::
+
 $ sudo service mysql start
 
 Setup an incremental backup cycle
