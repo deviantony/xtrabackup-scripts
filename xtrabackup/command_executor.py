@@ -70,10 +70,14 @@ class CommandExecutor:
         command = ['/bin/chown', '-R', user + ':' + group, directory_path]
         self.exec_command(command)
 
-    def create_archive(self, directory, archive_path):
+    def create_archive(self, directory, archive_path, compress):
+        if compress:
+            tar_options = 'cpvzf'
+        else:
+            tar_options = 'cpvf'
         command = [
             'tar',
-            'cpvzf',
+            tar_options,
             archive_path,
             '-C',
             directory, '.']
