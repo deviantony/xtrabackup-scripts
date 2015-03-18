@@ -83,10 +83,14 @@ class CommandExecutor:
             directory, '.']
         self.exec_command(command)
 
-    def extract_archive(self, archive_path, destination_path):
+    def extract_archive(self, archive_path, destination_path, compressed):
+        if compressed:
+            tar_options = 'xpvzf'
+        else:
+            tar_options = 'xpvf'
         command = [
             'tar',
-            'xpvzf',
+            tar_options,
             archive_path,
             '-C',
             destination_path]
