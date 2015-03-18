@@ -18,14 +18,17 @@ def create_sub_repository(repository_path, sub_directory):
     return sub_repository
 
 
-def prepare_archive_path(archive_sub_repository, prefix):
+def prepare_archive_path(archive_sub_repository, prefix, compress):
     archive_path = ''.join([
         archive_sub_repository,
         '/',
         prefix,
         'backup_',
-        datetime.datetime.now().strftime("%Y%m%d_%H%M"),
-        '.tar.gz'])
+        datetime.datetime.now().strftime("%Y%m%d_%H%M")])
+    if compress:
+        archive_path = archive_path + '.tar.gz'
+    else:
+        archive_path = archive_path + '.tar'
     return archive_path
 
 

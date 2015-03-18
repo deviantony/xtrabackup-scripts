@@ -1,6 +1,6 @@
 FROM deviantony/python-dev
 
-RUN apt-key adv --keyserver keys.gnupg.net --recv-keys 1C4CBDCDCD2EFD2A
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1C4CBDCDCD2EFD2A
 RUN echo 'deb http://repo.percona.com/apt trusty main\ndeb-src http://repo.percona.com/apt trusty main'\
  > /etc/apt/sources.list.d/percona.list
 

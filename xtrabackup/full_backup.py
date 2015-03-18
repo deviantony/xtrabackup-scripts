@@ -1,20 +1,36 @@
 """Xtrabackup script
 
 Usage:
-    pyxtrabackup <repository> --user=<user> [--password=<pwd>] [--tmp-dir=<tmp>] [--log-file=<log>] [--out-file=<log>] [--backup-threads=<threads>] 
+    pyxtrabackup <repository> --user=<user> \
+[--password=<pwd>] \
+[--tmp-dir=<tmp>] \
+[--log-file=<log>] \
+[--out-file=<log>] \
+[--backup-threads=<threads>] \
+[--no-compress]
     pyxtrabackup (-h | --help)
     pyxtrabackup --version
 
 
 Options:
-    -h --help                   Show this screen.
-    --version                   Show version.
-    --user=<user>               MySQL user.
-    --password=<pwd>            MySQL password.
-    --tmp-dir=<tmp>             Temporary directory [default: /tmp].
-    --log-file=<log>            Log file [default: /var/log/mysql/pyxtrabackup.log].
-    --out-file=<log>            Output file [default: /var/log/mysql/xtrabackup.out].    
-    --backup-threads=<threads>  Threads count [default: 1].
+    -h --help                   \
+    Show this screen.
+    --version                   \
+    Show version.
+    --user=<user>               \
+    MySQL user.
+    --password=<pwd>            \
+    MySQL password.
+    --tmp-dir=<tmp>             \
+    Temporary directory [default: /tmp].
+    --log-file=<log>            \
+    Log file [default: /var/log/mysql/pyxtrabackup.log].
+    --out-file=<log>            \
+    Output file [default: /var/log/mysql/xtrabackup.out].
+    --backup-threads=<threads>  \
+    Threads count [default: 1].
+    --no-compress               \
+    Do not create a compressed archive of the backup.
 
 """
 from docopt import docopt
@@ -25,7 +41,8 @@ from xtrabackup.backup_tools import BackupTool
 
 def main():
     arguments = docopt(__doc__, version='3.0.1')
-    backup_tool = BackupTool(arguments['--log-file'], arguments['--out-file'])
+    backup_tool = BackupTool(arguments['--log-file'], arguments['--out-file'],
+                             arguments['--no-compress'])
     try:
         backup_tool.start_full_backup(arguments['<repository>'],
                                       arguments['--tmp-dir'],
