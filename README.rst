@@ -100,6 +100,7 @@ You can also specify the following options:
 * --log-file: Log file for the script (default: */var/log/mysql/pyxtrabackup-inc.log*).
 * --out-file: Log file for innobackupex output (default: */var/log/mysql/xtrabackup.out*).
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
+* --no-compress: Do not compress the backup archives.
 
 
 Restoration
@@ -107,13 +108,17 @@ Restoration
 
 *WARNING*: The folder structure and the file names created by the *pyxtrabackup-inc* binary needs to be respected in order to restore successfully:
 
- *  TIMESTAMP_FOLDER/INC/base_backup_DATETIME.tar.gz
- *  TIMESTAMP_FOLDER/INC/inc_1_backup_DATETIME.tar.gz
- *  TIMESTAMP_FOLDER/INC/inc_N_backup_DATETIME.tar.gzz
+ *  TIMESTAMP_FOLDER/INC/base_backup_DATETIME.tar(.gz)
+ *  TIMESTAMP_FOLDER/INC/inc_1_backup_DATETIME.tar(.gz)
+ *  TIMESTAMP_FOLDER/INC/inc_N_backup_DATETIME.tar(.gz)
 
 To restore an incremental backup, you'll need to use the *pyxtrabackup-restore* binary the following way: ::
 
 $ pyxtrabackup-restore --base-archive=<PATH TO BASE BACKUP> --incremental-archive=<PATH TO INCREMENTAL BACKUP> --user=<MYSQL USER>
+
+Also, if you did use the *--no-compress* option with the backup tools, you'll need to specify the *--uncompressed-archives* option: ::
+
+$ pyxtrabackup-restore --base-archive=<PATH TO BASE BACKUP> --incremental-archive=<PATH TO INCREMENTAL BACKUP> --user=<MYSQL USER> --uncompressed-archives
 
 The binary will stop the MySQL service, remove all files present in MySQL datadir and import all the incremental backups up to the specified last incremental backup.
 
@@ -134,6 +139,7 @@ You can also specify the following options:
 * --log-file: Log file for the script (default: */var/log/mysql/pyxtrabackup-restore.log*).
 * --out-file: Log file for innobackupex output (default: */var/log/mysql/xtrabackup.out*).
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
+* --uncompressed-archives: Do not try to uncompress backup archives. Use this option if you used the backup tool with --no-compress.
 
 Limitations
 ===========
