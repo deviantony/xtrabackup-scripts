@@ -1,21 +1,36 @@
 """Xtrabackup script
 
 Usage:
-    pyxtrabackup <repository> --user=<user> [--password=<pwd>] [--tmp-dir=<tmp>] [--log-file=<log>] [--out-file=<log>] [--backup-threads=<threads>] [--no-compress] 
+    pyxtrabackup <repository> --user=<user> \
+[--password=<pwd>] \
+[--tmp-dir=<tmp>] \
+[--log-file=<log>] \
+[--out-file=<log>] \
+[--backup-threads=<threads>] \
+[--no-compress]
     pyxtrabackup (-h | --help)
     pyxtrabackup --version
 
 
 Options:
-    -h --help                   Show this screen.
-    --version                   Show version.
-    --user=<user>               MySQL user.
-    --password=<pwd>            MySQL password.
-    --tmp-dir=<tmp>             Temporary directory [default: /tmp].
-    --log-file=<log>            Log file [default: /var/log/mysql/pyxtrabackup.log].
-    --out-file=<log>            Output file [default: /var/log/mysql/xtrabackup.out].    
-    --backup-threads=<threads>  Threads count [default: 1].
-    --no-compress               Do not create a compressed archive of the backup.
+    -h --help                   \
+    Show this screen.
+    --version                   \
+    Show version.
+    --user=<user>               \
+    MySQL user.
+    --password=<pwd>            \
+    MySQL password.
+    --tmp-dir=<tmp>             \
+    Temporary directory [default: /tmp].
+    --log-file=<log>            \
+    Log file [default: /var/log/mysql/pyxtrabackup.log].
+    --out-file=<log>            \
+    Output file [default: /var/log/mysql/xtrabackup.out].
+    --backup-threads=<threads>  \
+    Threads count [default: 1].
+    --no-compress               \
+    Do not create a compressed archive of the backup.
 
 """
 from docopt import docopt
