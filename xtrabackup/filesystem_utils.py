@@ -39,7 +39,7 @@ def mkdir_path(path, mode):
         if exc.errno == errno.EEXIST and os.path.isdir(path):
             pass
         else:
-            raise
+            raise ProgramError("Unable to create directory: " + path)
 
 
 def check_required_binaries(binaries):
