@@ -29,7 +29,11 @@ class BackupTool:
             raise
 
     def prepare_workdir(self, path):
-        filesystem_utils.mkdir_path(path, 0o755)
+        try:
+            filesystem_utils.mkdir_path(path, 0o755)
+        except exception.ProgramError:
+            self.logger.error('Workdir preparation failed.', exc_info=True)
+            raise
         self.workdir = path + '/xtrabackup_tmp'
         self.logger.debug("Temporary workdir: " + self.workdir)
         if self.compress:
