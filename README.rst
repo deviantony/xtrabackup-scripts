@@ -19,6 +19,14 @@ Use ``pip`` to install it::
 
    $ pip install pyxtrabackup
 
+
+Requirements
+------------
+
+You'll need to install Percona Xtrabackup on your system in order to use the tool.
+
+See: `Installation documentation <http://www.percona.com/doc/percona-xtrabackup/installation.html>`_
+
 Full backup and restoration
 ===========================
 
@@ -149,9 +157,8 @@ You can use the Dockerfile to build a development environment container with all
 
 $ docker build -t pyxtrabackup .
 
-Then you can use it to run the scripts:
+Then you can use it to run the scripts: ::
 
-::
 $ docker run --rm -it ${PWD}:/src pyxtrabackup zsh
 $ cd /src
 $ python xtrabackup/full_backup.py ...
