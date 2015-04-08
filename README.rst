@@ -141,6 +141,22 @@ You can also specify the following options:
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
 * --uncompressed-archives: Do not try to uncompress backup archives. Use this option if you used the backup tool with --no-compress.
 
+
+Development
+===========
+
+You can use the Dockerfile to build a development environment container with all pre-requisites: ::
+
+$ docker build -t pyxtrabackup .
+
+Then you can use it to run the scripts:
+
+::
+$ docker run --rm -it ${PWD}:/src pyxtrabackup zsh
+$ cd /src
+$ python xtrabackup/full_backup.py ...
+
+
 Limitations
 ===========
 
