@@ -6,13 +6,13 @@ RUN echo 'deb http://repo.percona.com/apt trusty main\ndeb-src http://repo.perco
 
 RUN apt-get update && apt-get install -y mysql-server percona-xtrabackup
 
-ADD requirements.txt /tmp/requirements.txt
+COPY requirements.txt /tmp/requirements.txt
 RUN /bin/zsh -c 'source ~/.zshrc; workon python3; pip install -r /tmp/requirements.txt'
 RUN /bin/zsh -c 'source ~/.zshrc; workon python2.7; pip install -r /tmp/requirements.txt'
 
-RUN echo "export PYTHONPATH=${PYTHONPATH}:/python" >> /root/.zshrc
+RUN echo "export PYTHONPATH=${PYTHONPATH}" >> /root/.zshrc
 
-ADD tests/prepare_database.sql /sql/prepare_database.sql
-ADD tests/insert_data.sql /sql/insert_data.sql
+COPY tests/prepare_database.sql /sql/prepare_database.sql
+COPY tests/insert_data.sql /sql/insert_data.sql
 
 RUN /etc/init.d/mysql start && cat /sql/prepare_database.sql | mysql -u root
