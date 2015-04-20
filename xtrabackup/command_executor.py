@@ -38,6 +38,7 @@ class CommandExecutor:
             '--incremental-lsn=' + lsn,
             '--no-lock',
             '--no-timestamp',
+            '--incremental-force-scan',
             backup_directory]
         if password:
             command.append('--password=' + password)
