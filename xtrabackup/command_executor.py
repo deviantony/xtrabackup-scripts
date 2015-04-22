@@ -38,6 +38,7 @@ class CommandExecutor:
             '--incremental-lsn=' + lsn,
             '--no-lock',
             '--no-timestamp',
+            '--incremental-force-scan',
             backup_directory]
         if password:
             command.append('--password=' + password)
@@ -70,19 +71,27 @@ class CommandExecutor:
         command = ['/bin/chown', '-R', user + ':' + group, directory_path]
         self.exec_command(command)
 
-    def create_archive(self, directory, archive_path):
+    def create_archive(self, directory, archive_path, compress):
+        if compress:
+            tar_options = 'cpvzf'
+        else:
+            tar_options = 'cpvf'
         command = [
             'tar',
-            'cpvzf',
+            tar_options,
             archive_path,
             '-C',
             directory, '.']
         self.exec_command(command)
 
-    def extract_archive(self, archive_path, destination_path):
+    def extract_archive(self, archive_path, destination_path, compressed):
+        if compressed:
+            tar_options = 'xpvzf'
+        else:
+            tar_options = 'xpvf'
         command = [
             'tar',
-            'xpvzf',
+            tar_options,
             archive_path,
             '-C',
             destination_path]

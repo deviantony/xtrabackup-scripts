@@ -19,6 +19,14 @@ Use ``pip`` to install it::
 
    $ pip install pyxtrabackup
 
+
+Requirements
+------------
+
+You'll need to install Percona Xtrabackup on your system in order to use the tool.
+
+See: `Installation documentation <http://www.percona.com/doc/percona-xtrabackup/installation.html>`_
+
 Full backup and restoration
 ===========================
 
@@ -46,18 +54,28 @@ You can also specify the following options:
 * --log-file: Log file for the script (default: */var/log/mysql/pyxtrabackup.log*).
 * --out-file: Log file for innobackupex output (default: */var/log/mysql/xtrabackup.out*).
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
-
+* --no-compress: Do not compress the backup archive.
+* --webhook: URL to send a POST request after the backup is finished. Will send the *archive_path* and *archive_repository* in JSON.
 
 Restoration
 -----------
 
-The archive is containing a binary backup of a MySQL server, all you need to do in order to restore the backup is to extract the content of the archive in your MySQL datadir, setup the permissions for the files and start your server:
+The archive is containing a binary backup of a MySQL server, all you need to do in order to restore the backup is to extract the content of the archive in your MySQL datadir, setup the permissions for the files and start your server.
 
-::
+Clean the MySQL datadir::
 
 $ sudo rm -rf /path/to/mysql/datadir/*
+
+If you compressed the archive, uncompress and extract it::
+
 $ sudo tar xvpzf /path/to/backup_archive.tar.gz -C /path/to/mysql/datadir
-$ sudo chown -R mysql:mysql /path/to/mysql/datadir
+
+Otherwise you just need to extract it::
+
+$ sudo tar xvpf /path/to/backup_archive.tar -C /path/to/mysql/datadir
+
+Then restart your MySQL server::
+
 $ sudo service mysql start
 
 Setup an incremental backup cycle
@@ -91,6 +109,7 @@ You can also specify the following options:
 * --log-file: Log file for the script (default: */var/log/mysql/pyxtrabackup-inc.log*).
 * --out-file: Log file for innobackupex output (default: */var/log/mysql/xtrabackup.out*).
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
+* --no-compress: Do not compress the backup archives.
 
 
 Restoration
@@ -98,13 +117,17 @@ Restoration
 
 *WARNING*: The folder structure and the file names created by the *pyxtrabackup-inc* binary needs to be respected in order to restore successfully:
 
- *  TIMESTAMP_FOLDER/INC/base_backup_DATETIME.tar.gz
- *  TIMESTAMP_FOLDER/INC/inc_1_backup_DATETIME.tar.gz
- *  TIMESTAMP_FOLDER/INC/inc_N_backup_DATETIME.tar.gzz
+ *  TIMESTAMP_FOLDER/INC/base_backup_DATETIME.tar(.gz)
+ *  TIMESTAMP_FOLDER/INC/inc_1_backup_DATETIME.tar(.gz)
+ *  TIMESTAMP_FOLDER/INC/inc_N_backup_DATETIME.tar(.gz)
 
 To restore an incremental backup, you'll need to use the *pyxtrabackup-restore* binary the following way: ::
 
 $ pyxtrabackup-restore --base-archive=<PATH TO BASE BACKUP> --incremental-archive=<PATH TO INCREMENTAL BACKUP> --user=<MYSQL USER>
+
+Also, if you did use the *--no-compress* option with the backup tools, you'll need to specify the *--uncompressed-archives* option: ::
+
+$ pyxtrabackup-restore --base-archive=<PATH TO BASE BACKUP> --incremental-archive=<PATH TO INCREMENTAL BACKUP> --user=<MYSQL USER> --uncompressed-archives
 
 The binary will stop the MySQL service, remove all files present in MySQL datadir and import all the incremental backups up to the specified last incremental backup.
 
@@ -125,6 +148,22 @@ You can also specify the following options:
 * --log-file: Log file for the script (default: */var/log/mysql/pyxtrabackup-restore.log*).
 * --out-file: Log file for innobackupex output (default: */var/log/mysql/xtrabackup.out*).
 * --backup-threads: You can specify more threads in order to backup quicker (default: 1).
+* --uncompressed-archives: Do not try to uncompress backup archives. Use this option if you used the backup tool with --no-compress.
+
+
+Development
+===========
+
+You can use the Dockerfile to build a development environment container with all pre-requisites: ::
+
+$ docker build -t pyxtrabackup .
+
+Then you can use it to run the scripts: ::
+
+$ docker run --rm -it ${PWD}:/src pyxtrabackup zsh
+$ cd /src
+$ python xtrabackup/full_backup.py ...
+
 
 Limitations
 ===========

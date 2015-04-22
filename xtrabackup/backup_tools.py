@@ -1,5 +1,6 @@
 from xtrabackup.command_executor import CommandExecutor
 from xtrabackup.exception import ProcessError
+from xtrabackup.http_manager import HttpManager
 import xtrabackup.filesystem_utils as filesystem_utils
 import xtrabackup.log_manager as log_manager
 import xtrabackup.exception as exception
@@ -9,11 +10,13 @@ import logging
 
 class BackupTool:
 
-    def __init__(self, log_file, output_file):
+    def __init__(self, log_file, output_file, no_compression):
         self.log_manager = log_manager.LogManager()
         self.stop_watch = timer.Timer()
         self.setup_logging(log_file)
         self.command_executor = CommandExecutor(output_file)
+        self.compress = not no_compression
+        self.http = HttpManager()
 
     def setup_logging(self, log_file):
         self.logger = logging.getLogger(__name__)
@@ -28,10 +31,17 @@ class BackupTool:
             raise
 
     def prepare_workdir(self, path):
-        filesystem_utils.mkdir_path(path, 0o755)
+        try:
+            filesystem_utils.mkdir_path(path, 0o755)
+        except exception.ProgramError:
+            self.logger.error('Workdir preparation failed.', exc_info=True)
+            raise
         self.workdir = path + '/xtrabackup_tmp'
         self.logger.debug("Temporary workdir: " + self.workdir)
-        self.archive_path = path + '/backup.tar.gz'
+        if self.compress:
+            self.archive_path = path + '/backup.tar.gz'
+        else:
+            self.archive_path = path + '/backup.tar'
         self.logger.debug("Temporary archive: " + self.archive_path)
 
     def prepare_repository(self, repository, incremental):
@@ -51,7 +61,7 @@ class BackupTool:
             else:
                 backup_prefix = ''
         self.final_archive_path = filesystem_utils.prepare_archive_path(
-            self.backup_repository, backup_prefix)
+            self.backup_repository, backup_prefix, self.compress)
 
     def exec_incremental_backup(self, user, password, thread_count):
         self.stop_watch.start_timer()
@@ -104,18 +114,18 @@ class BackupTool:
                          self.stop_watch.stop_timer(),
                          self.stop_watch.duration_in_seconds())
 
-    def compress_backup(self):
+    def archive_backup(self):
         self.stop_watch.start_timer()
         try:
             self.command_executor.create_archive(
-                self.workdir, self.archive_path)
+                self.workdir, self.archive_path, self.compress)
         except ProcessError:
             self.logger.error(
-                'An error occured during the backup compression.',
+                'An error occured during the archiving of the backup.',
                 exc_info=True)
             self.clean()
             raise
-        self.logger.info("Backup compression time: %s - Duration: %s",
+        self.logger.info("Backup archiving time: %s - Duration: %s",
                          self.stop_watch.stop_timer(),
                          self.stop_watch.duration_in_seconds())
 
@@ -127,7 +137,7 @@ class BackupTool:
                                        self.final_archive_path)
         except Exception:
             self.logger.error(
-                'An error occured during the backup compression.',
+                'An error occured during the backup transfer.',
                 exc_info=True)
             self.clean()
             raise
@@ -137,6 +147,15 @@ class BackupTool:
 
     def clean(self):
         filesystem_utils.delete_directory_if_exists(self.workdir)
+
+    def trigger_webhook(self, webhook_url):
+        postdata = {
+            'archive_repository': self.backup_repository,
+            'archive_path': self.final_archive_path,
+        }
+        self.logger.debug("POST archive_repository: " + self.backup_repository)
+        self.logger.debug("POST archive_path: " + self.final_archive_path)
+        self.http.post(webhook_url, postdata)
 
     def save_incremental_data(self, incremental):
         try:
@@ -178,16 +197,19 @@ class BackupTool:
             self.clean()
             raise
 
-    def start_full_backup(self, repository, workdir, user, password, threads):
+    def start_full_backup(self, repository, workdir, user,
+                          password, threads, webhook):
         self.check_prerequisites(repository)
         self.prepare_workdir(workdir)
         self.prepare_repository(repository, False)
         self.prepare_archive_name(False, False)
         self.exec_full_backup(user, password, threads)
         self.prepare_backup(False)
-        self.compress_backup()
+        self.archive_backup()
         self.transfer_backup(repository)
         self.clean()
+        if webhook:
+            self.trigger_webhook(webhook)
 
     def start_incremental_backup(self, repository, incremental,
                                  workdir, user, password, threads):
@@ -202,6 +224,6 @@ class BackupTool:
             self.prepare_archive_name(incremental, True)
             self.exec_full_backup(user, password, threads)
         self.save_incremental_data(incremental)
-        self.compress_backup()
+        self.archive_backup()
         self.transfer_backup(repository)
         self.clean()

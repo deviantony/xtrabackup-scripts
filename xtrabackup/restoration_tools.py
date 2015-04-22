@@ -8,12 +8,13 @@ import logging
 
 class RestorationTool:
 
-    def __init__(self, log_file, output_file, data_dir):
+    def __init__(self, log_file, output_file, data_dir, uncompressed_archives):
         self.log_manager = log_manager.LogManager()
         self.data_dir = data_dir
         self.stop_watch = timer.Timer()
         self.setup_logging(log_file)
         self.command_executor = CommandExecutor(output_file)
+        self.compressed_archives = not uncompressed_archives
 
     def setup_logging(self, log_file):
         self.logger = logging.getLogger(__name__)
@@ -47,7 +48,9 @@ class RestorationTool:
     def restore_base_backup(self, archive_path):
         self.stop_watch.start_timer()
         try:
-            self.command_executor.extract_archive(archive_path, self.data_dir)
+            self.command_executor.extract_archive(archive_path,
+                                                  self.data_dir,
+                                                  self.compressed_archives)
             self.command_executor.exec_backup_preparation(self.data_dir, True)
         except ProcessError:
             self.logger.error(
@@ -84,7 +87,8 @@ class RestorationTool:
                                               prefix, 'archive'])
             filesystem_utils.mkdir_path(extracted_archive_path, 0o755)
             self.command_executor.extract_archive(backup_archive,
-                                                  extracted_archive_path)
+                                                  extracted_archive_path,
+                                                  self.compressed_archives)
             self.command_executor.exec_incremental_preparation(
                 self.data_dir,
                 extracted_archive_path)

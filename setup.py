@@ -39,7 +39,7 @@ setup(
         'Programming Language :: Python :: 3.4',
     ],
 
-    keywords='mysql database backup percona xtrabackup',
+    keywords='mysql mariadb database backup percona xtrabackup',
 
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'sql']),
 
