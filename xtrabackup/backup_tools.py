@@ -1,5 +1,6 @@
 from xtrabackup.command_executor import CommandExecutor
 from xtrabackup.exception import ProcessError
+from xtrabackup.http_manager import HttpManager
 import xtrabackup.filesystem_utils as filesystem_utils
 import xtrabackup.log_manager as log_manager
 import xtrabackup.exception as exception
@@ -15,6 +16,7 @@ class BackupTool:
         self.setup_logging(log_file)
         self.command_executor = CommandExecutor(output_file)
         self.compress = not no_compression
+        self.http = HttpManager()
 
     def setup_logging(self, log_file):
         self.logger = logging.getLogger(__name__)
@@ -146,6 +148,15 @@ class BackupTool:
     def clean(self):
         filesystem_utils.delete_directory_if_exists(self.workdir)
 
+    def trigger_webhook(self, webhook_url):
+        postdata = {
+            'archive_repository': self.backup_repository,
+            'archive_path': self.final_archive_path,
+        }
+        self.logger.debug("POST archive_repository: " + self.backup_repository)
+        self.logger.debug("POST archive_path: " + self.final_archive_path)
+        self.http.post(webhook_url, postdata)
+
     def save_incremental_data(self, incremental):
         try:
             if incremental:
@@ -187,7 +198,7 @@ class BackupTool:
             raise
 
     def start_full_backup(self, repository, workdir, user,
-                          password, threads):
+                          password, threads, webhook):
         self.check_prerequisites(repository)
         self.prepare_workdir(workdir)
         self.prepare_repository(repository, False)
@@ -197,6 +208,8 @@ class BackupTool:
         self.archive_backup()
         self.transfer_backup(repository)
         self.clean()
+        if webhook:
+            self.trigger_webhook(webhook)
 
     def start_incremental_backup(self, repository, incremental,
                                  workdir, user, password, threads):

@@ -7,7 +7,8 @@ Usage:
 [--log-file=<log>] \
 [--out-file=<log>] \
 [--backup-threads=<threads>] \
-[--no-compress]
+[--no-compress] \
+[--webhook=<url>]
     pyxtrabackup (-h | --help)
     pyxtrabackup --version
 
@@ -31,6 +32,8 @@ Options:
     Threads count [default: 1].
     --no-compress               \
     Do not create a compressed archive of the backup.
+    --webhook=<url>             \
+    Webhook post backup. If enable will post backup information in JSON format.
 
 """
 from docopt import docopt
@@ -48,7 +51,8 @@ def main():
                                       arguments['--tmp-dir'],
                                       arguments['--user'],
                                       arguments['--password'],
-                                      arguments['--backup-threads'])
+                                      arguments['--backup-threads'],
+                                      arguments['--webhook'])
     except Exception:
         logger = logging.getLogger(__name__)
         logger.error("pyxtrabackup failed.")
