@@ -43,7 +43,7 @@ setup(
 
     packages=find_packages(exclude=['contrib', 'docs', 'tests*', 'sql']),
 
-    install_requires=['docopt'],
+    install_requires=['docopt', 'requests'],
 
     # extras_require = {
     #     'dev': ['check-manifest'],
