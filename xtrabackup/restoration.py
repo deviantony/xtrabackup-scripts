@@ -65,7 +65,7 @@ def main():
                                        arguments['--restart'])
     except Exception:
         logger = logging.getLogger(__name__)
-        logger.error("pyxtrabackup failed.")
+        logger.error("pyxtrabackup failed.", exc_info=True)
         exit(1)
     exit(0)
 
