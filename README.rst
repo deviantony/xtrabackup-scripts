@@ -160,7 +160,7 @@ $ docker build -t pyxtrabackup .
 
 Then you can use it to run the scripts: ::
 
-$ docker run --rm -it ${PWD}:/src pyxtrabackup zsh
+$ docker run --rm -it -v ${PWD}:/src pyxtrabackup zsh
 $ cd /src
 $ python xtrabackup/full_backup.py ...
 

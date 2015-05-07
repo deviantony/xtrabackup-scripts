@@ -43,7 +43,7 @@ from xtrabackup.backup_tools import BackupTool
 
 
 def main():
-    arguments = docopt(__doc__, version='3.1.1')
+    arguments = docopt(__doc__, version='3.1.2')
     backup_tool = BackupTool(arguments['--log-file'], arguments['--out-file'],
                              arguments['--no-compress'])
     try:
@@ -55,7 +55,7 @@ def main():
                                       arguments['--webhook'])
     except Exception:
         logger = logging.getLogger(__name__)
-        logger.error("pyxtrabackup failed.")
+        logger.error("pyxtrabackup failed.", exc_info=True)
         exit(1)
     exit(0)
 

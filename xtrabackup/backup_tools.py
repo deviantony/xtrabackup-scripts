@@ -49,8 +49,12 @@ class BackupTool:
             sub_directory = '/INC'
         else:
             sub_directory = ''
-        self.backup_repository = filesystem_utils.create_sub_repository(
-            repository, sub_directory)
+        try:
+            self.backup_repository = filesystem_utils.create_sub_repository(
+                repository, sub_directory)
+        except exception.ProgramError:
+            self.logger.error('Unable to create repository.', exc_info=True)
+            raise
 
     def prepare_archive_name(self, incremental, incremental_cycle):
         if incremental:
