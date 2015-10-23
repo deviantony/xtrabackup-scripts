@@ -1,14 +1,7 @@
 """Xtrabackup script
 
 Usage:
-    pyxtrabackup <repository> --user=<user> \
-[--password=<pwd>] \
-[--tmp-dir=<tmp>] \
-[--log-file=<log>] \
-[--out-file=<log>] \
-[--backup-threads=<threads>] \
-[--no-compress] \
-[--webhook=<url>]
+    pyxtrabackup <repository> --user=<user> [options]
     pyxtrabackup (-h | --help)
     pyxtrabackup --version
 
@@ -16,6 +9,8 @@ Usage:
 Options:
     -h --help                   \
     Show this screen.
+    -d --debug                  \
+    Enable verbose error
     --version                   \
     Show version.
     --user=<user>               \
@@ -44,9 +39,11 @@ from xtrabackup.backup_tools import BackupTool
 
 def main():
     arguments = docopt(__doc__, version='3.1.2')
-    backup_tool = BackupTool(arguments['--log-file'], arguments['--out-file'],
-                             arguments['--no-compress'])
     try:
+        backup_tool = BackupTool(
+            arguments['--log-file'], arguments['--out-file'],
+            arguments['--no-compress'], arguments['--debug'])
+
         backup_tool.start_full_backup(arguments['<repository>'],
                                       arguments['--tmp-dir'],
                                       arguments['--user'],
@@ -55,7 +52,7 @@ def main():
                                       arguments['--webhook'])
     except Exception:
         logger = logging.getLogger(__name__)
-        logger.error("pyxtrabackup failed.", exc_info=True)
+        logger.error("pyxtrabackup failed.", exc_info=arguments['--debug'])
         exit(1)
     exit(0)
 
