@@ -1,2 +1,2 @@
-docopt
-requests
+docopt==0.6.2
+requests==2.8.1

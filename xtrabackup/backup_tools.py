@@ -10,10 +10,18 @@ import logging
 
 class BackupTool:
 
-    def __init__(self, log_file, output_file, no_compression):
+    def __init__(self, log_file, output_file, no_compression, debug=False):
+        self.debug = debug
         self.log_manager = log_manager.LogManager()
         self.stop_watch = timer.Timer()
         self.setup_logging(log_file)
+        try:
+            with open(output_file, 'a+'):
+                pass
+        except Exception as error:
+            self.logger.error('Output file error: %s', str(error),
+                              exc_info=self.debug)
+            raise
         self.command_executor = CommandExecutor(output_file)
         self.compress = not no_compression
         self.http = HttpManager()
@@ -26,15 +34,17 @@ class BackupTool:
         try:
             filesystem_utils.check_required_binaries(['innobackupex', 'tar'])
             filesystem_utils.check_path_existence(repository)
-        except exception.ProgramError:
-            self.logger.error('Prerequisites check failed.', exc_info=True)
+        except exception.ProgramError as error:
+            self.logger.error('Prerequisites check failed. %s', str(error),
+                              exc_info=self.debug)
             raise
 
     def prepare_workdir(self, path):
         try:
             filesystem_utils.mkdir_path(path, 0o755)
         except exception.ProgramError:
-            self.logger.error('Workdir preparation failed.', exc_info=True)
+            self.logger.error('Workdir preparation failed.',
+                              exc_info=self.debug)
             raise
         self.workdir = path + '/xtrabackup_tmp'
         self.logger.debug("Temporary workdir: " + self.workdir)
@@ -53,7 +63,8 @@ class BackupTool:
             self.backup_repository = filesystem_utils.create_sub_repository(
                 repository, sub_directory)
         except exception.ProgramError:
-            self.logger.error('Unable to create repository.', exc_info=True)
+            self.logger.error('Unable to create repository.',
+                              exc_info=self.debug)
             raise
 
     def prepare_archive_name(self, incremental, incremental_cycle):
@@ -79,7 +90,7 @@ class BackupTool:
         except ProcessError:
             self.logger.error(
                 'An error occured during the incremental backup process.',
-                exc_info=True)
+                exc_info=self.debug)
             self.clean()
             raise
         self.logger.info("Incremental backup time: %s - Duration: %s",
@@ -96,7 +107,8 @@ class BackupTool:
                 self.workdir)
         except ProcessError:
             self.logger.error(
-                'An error occured during the backup process.', exc_info=True)
+                'An error occured during the backup process.',
+                exc_info=self.debug)
             self.clean()
             raise
         self.logger.info("Backup time: %s - Duration: %s",
@@ -111,7 +123,7 @@ class BackupTool:
         except ProcessError:
             self.logger.error(
                 'An error occured during the preparation process.',
-                exc_info=True)
+                exc_info=self.debug)
             self.clean()
             raise
         self.logger.info("Backup preparation time: %s - Duration: %s",
@@ -126,7 +138,7 @@ class BackupTool:
         except ProcessError:
             self.logger.error(
                 'An error occured during the archiving of the backup.',
-                exc_info=True)
+                exc_info=self.debug)
             self.clean()
             raise
         self.logger.info("Backup archiving time: %s - Duration: %s",
@@ -142,7 +154,7 @@ class BackupTool:
         except Exception:
             self.logger.error(
                 'An error occured during the backup transfer.',
-                exc_info=True)
+                exc_info=self.debug)
             self.clean()
             raise
         self.logger.info("Archive copy time: %s - Duration: %s",
@@ -178,7 +190,7 @@ class BackupTool:
         except:
             self.logger.error(
                 'Unable to save the incremental backup data.',
-                exc_info=True)
+                exc_info=self.debug)
             self.clean()
             raise
 
@@ -197,7 +209,7 @@ class BackupTool:
         except:
             self.logger.error(
                 'Unable to load the incremental backup data.',
-                exc_info=True)
+                exc_info=self.debug)
             self.clean()
             raise
 
