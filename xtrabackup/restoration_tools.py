@@ -67,7 +67,7 @@ class RestorationTool:
             repository, archive_name = filesystem_utils.split_path(
                 incremental_archive)
             incremental_target = int(archive_name.split('_')[1])
-            for step in range(1, incremental_target + 1):
+            for step in range(0, incremental_target + 1):
                 self.apply_incremental_backup(repository, step)
         except:
             self.logger.error(
