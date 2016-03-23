@@ -62,6 +62,12 @@ Restoration
 
 The archive is containing a binary backup of a MySQL server, all you need to do in order to restore the backup is to extract the content of the archive in your MySQL datadir, setup the permissions for the files and start your server.
 
+*Note*: If you are restoring a backup from another server, be sure that the server configuration of the new server is the same otherwise it could cause issues when trying to restart MySQL.
+
+Stop the MySQL service first::
+
+$ sudo service MySQL stop
+
 Clean the MySQL datadir::
 
 $ sudo rm -rf /path/to/mysql/datadir/*
