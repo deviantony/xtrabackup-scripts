@@ -38,7 +38,7 @@ from xtrabackup.backup_tools import BackupTool
 
 
 def main():
-    arguments = docopt(__doc__, version='3.1.2')
+    arguments = docopt(__doc__, version='3.1.5')
     try:
         backup_tool = BackupTool(
             arguments['--log-file'], arguments['--out-file'],

@@ -53,7 +53,7 @@ from xtrabackup.restoration_tools import RestorationTool
 
 
 def main():
-    arguments = docopt(__doc__, version='3.1.2')
+    arguments = docopt(__doc__, version='3.1.5')
     restore_tool = RestorationTool(arguments['--log-file'],
                                    arguments['--out-file'],
                                    arguments['--data-dir'],
