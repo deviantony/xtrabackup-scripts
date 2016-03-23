@@ -45,11 +45,6 @@ setup(
 
     install_requires=['docopt', 'requests'],
 
-    # extras_require = {
-    #     'dev': ['check-manifest'],
-    #     'test': ['coverage'],
-    # },
-
     entry_points={
         'console_scripts': [
             'pyxtrabackup=xtrabackup.full_backup:main',
