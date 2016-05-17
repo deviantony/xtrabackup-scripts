@@ -64,7 +64,7 @@ class CommandExecutor:
         self.exec_command(command)
 
     def exec_manage_service(self, service_name, action):
-        command = ['/etc/init.d/' + service_name, action]
+        command = ['service', service_name, action]
         self.exec_command(command)
 
     def exec_chown(self, user, group, directory_path):
