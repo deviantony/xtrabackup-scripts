@@ -12,6 +12,11 @@ pyxtrabackup
 
 The tool allows you to take full and incremental backups using Xtrabackup.
 
+Call for maintainers
+====================
+
+The author `deviantony <https://github.com/deviantony>`_ currently doesn't actively use this tool and he's looking for awesome contributors to help maintain this project. Please don't hesitate to contact him directly or check the `issue #40 <https://github.com/deviantony/xtrabackup-scripts/issues/40>`_ for more information.
+
 Installation
 ============
 
